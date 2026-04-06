@@ -2,38 +2,70 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>UstaYapı</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f59e0b">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="UstaYapı">
 <link rel="apple-touch-icon" href="icon.svg">
-<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:#07090f;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;overscroll-behavior:none;}
-#boot{position:fixed;inset:0;background:#07090f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9999;transition:opacity 0.4s;}
-.spin{width:36px;height:36px;border:3px solid rgba(245,158,11,0.2);border-top-color:#f59e0b;border-radius:50%;animation:spin 0.8s linear infinite;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#07090f;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#e8edf5;overscroll-behavior:none}
+#boot{position:fixed;inset:0;background:#07090f;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999}
+.spin{width:36px;height:36px;border:3px solid rgba(245,158,11,.2);border-top-color:#f59e0b;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.bt{color:#f59e0b;font-size:20px;font-weight:800;letter-spacing:-0.5px;}
-.bs{color:#4a5568;font-size:12px;}
-input,select,button{font-family:inherit;}
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#1b2438;border-radius:4px;}
-@media print{#print-area{display:block!important;}body>*:not(#print-area){display:none!important;}}
-#print-area{display:none;}
+input,select,button,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:#1b2438;border-radius:4px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px}
+.modal{background:#0e1420;border:1px solid #1b2438;border-radius:18px;width:100%;max-height:92vh;overflow-y:auto}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #1b2438;position:sticky;top:0;background:#0e1420;z-index:1}
+.modal-bd{padding:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;font-weight:700;cursor:pointer;border:none;white-space:nowrap;transition:opacity .15s}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:#f59e0b;color:#0a0800}
+.btn-ghost{background:transparent;color:#7a8ba8;border:1px solid #1b2438}
+.btn-danger{background:rgba(240,82,82,.08);color:#f05252;border:1px solid rgba(240,82,82,.25)}
+.btn-success{background:rgba(16,217,138,.08);color:#10d98a;border:1px solid rgba(16,217,138,.25)}
+.btn-blue{background:rgba(79,156,249,.08);color:#4f9cf9;border:1px solid rgba(79,156,249,.25)}
+.btn-purple{background:rgba(167,139,250,.08);color:#a78bfa;border:1px solid rgba(167,139,250,.25)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-md{padding:10px 20px;font-size:14px}
+.btn-lg{padding:13px 28px;font-size:15px}
+.btn-full{width:100%}
+.inp{background:#07090f;border:1px solid #1b2438;border-radius:10px;padding:10px 14px;color:#e8edf5;font-size:14px;outline:none;width:100%;box-sizing:border-box}
+.inp:focus{border-color:#f59e0b}
+.sel{background:#07090f;border:1px solid #1b2438;border-radius:10px;padding:10px 14px;color:#e8edf5;font-size:14px;outline:none;width:100%}
+.card{background:#0e1420;border:1px solid #1b2438;border-radius:14px;padding:20px}
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;display:inline-block}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:0}
+.field label{font-size:11px;color:#4a5568;font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.flex{display:flex;align-items:center}
+.gap8{gap:8px}
+.gap10{gap:10px}
+.row{display:flex;justify-content:space-between;align-items:center}
+nav button{background:transparent;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;color:#7a8ba8;font-size:14px;display:flex;align-items:center;gap:10px;width:100%;text-align:left;font-weight:500;margin-bottom:2px}
+nav button.active{background:rgba(245,158,11,.09);color:#f59e0b;font-weight:700}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 12px;text-align:left;font-size:10px;color:#4a5568;font-weight:700;text-transform:uppercase;white-space:nowrap;border-bottom:1px solid #1b2438}
+td{padding:10px 12px;font-size:13px;border-bottom:1px solid #1b2438}
+tr:last-child td{border-bottom:none}
+.notif-panel{position:fixed;top:0;right:0;bottom:0;width:290px;background:#0e1420;border-left:1px solid #1b2438;z-index:500;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.5)}
+@media print{#print-area{display:block!important}body>*:not(#print-area){display:none!important}}
+#print-area{display:none}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}}
+.tag{display:inline-block;padding:5px 12px;border-radius:20px;border:1px solid #1b2438;background:transparent;color:#7a8ba8;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
+.tag.active{border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.09);color:#f59e0b;font-weight:700}
+.save-status{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);border-radius:20px;padding:8px 20px;font-size:13px;font-weight:700;z-index:500;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4);transition:opacity .3s}
 </style>
 </head>
 <body>
 <div id="boot">
-  <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
+  <svg width="68" height="68" viewBox="0 0 80 80" fill="none">
     <rect width="80" height="80" rx="18" fill="#0d3d4f"/>
     <rect x="22" y="38" width="36" height="24" rx="2" fill="#b08030"/>
     <rect x="18" y="32" width="44" height="8" rx="2" fill="#c9952a"/>
@@ -44,29 +76,18 @@ input,select,button{font-family:inherit;}
     <rect x="56" y="18" width="14" height="6" rx="2" fill="#f5a623" transform="rotate(-35 56 18)"/>
     <rect x="64" y="20" width="3" height="14" rx="1" fill="#f5a623" transform="rotate(-35 64 20)"/>
     <circle cx="40" cy="67" r="5" fill="none" stroke="#f5a623" stroke-width="2.5"/>
-    <circle cx="20" cy="18" r="2" fill="#f5e642" opacity="0.7"/>
+    <circle cx="20" cy="18" r="2" fill="#f5e642" opacity=".7"/>
   </svg>
-  <div class="bt">UstaYapı</div>
+  <div style="color:#f59e0b;font-size:22px;font-weight:800;letter-spacing:-.5px">UstaYapı</div>
   <div class="spin"></div>
-  <div class="bs">Yükleniyor...</div>
+  <div style="color:#4a5568;font-size:12px">Yükleniyor...</div>
 </div>
-<div id="root"></div>
+<div id="app"></div>
 
-<script type="text/babel" data-presets="react">
-const {useState,useMemo,useRef,useEffect,useCallback}=React;
-const RC=window.Recharts||{};
-const {AreaChart,Area,BarChart,Bar,PieChart,Pie,Cell,XAxis,YAxis,CartesianGrid,Tooltip,ResponsiveContainer,Legend}=RC;
-
-// ── THEME ─────────────────────────────────────────────────────
-const C={bg:"#07090f",card:"#0e1420",border:"#1b2438",nav:"#060810",
-  accent:"#f59e0b",accentBg:"rgba(245,158,11,0.09)",accentBorder:"rgba(245,158,11,0.28)",
-  text:"#e8edf5",muted:"#4a5568",sub:"#7a8ba8",
-  success:"#10d98a",successBg:"rgba(16,217,138,0.08)",successBorder:"rgba(16,217,138,0.25)",
-  danger:"#f05252",dangerBg:"rgba(240,82,82,0.08)",dangerBorder:"rgba(240,82,82,0.25)",
-  blue:"#4f9cf9",blueBg:"rgba(79,156,249,0.08)",blueBorder:"rgba(79,156,249,0.25)",
-  purple:"#a78bfa",purpleBg:"rgba(167,139,250,0.08)",purpleBorder:"rgba(167,139,250,0.25)",
-};
-const PIE_COLORS=["#f59e0b","#4f9cf9","#10d98a","#f05252","#a78bfa","#fb923c","#34d399","#60a5fa"];
+<script type="module">
+import{h,render,Fragment}from'https://esm.sh/preact@10';
+import{useState,useMemo,useEffect,useRef,useCallback}from'https://esm.sh/preact@10/hooks';
+import{html}from'https://esm.sh/htm@3/preact';
 
 // ── CONSTANTS ─────────────────────────────────────────────────
 const CATS=[
@@ -90,234 +111,977 @@ const STAFF=[
 // ── HELPERS ───────────────────────────────────────────────────
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const tl=n=>new Intl.NumberFormat("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0)+" ₺";
-const dt=s=>{const d=new Date(s);return d.toLocaleDateString("tr-TR")+" "+d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});};
+const dt=s=>{const d=new Date(s);return d.toLocaleDateString("tr-TR")+" "+d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})};
 const dShort=s=>new Date(s).toLocaleDateString("tr-TR",{day:"2-digit",month:"2-digit"});
 const isToday=s=>s?.slice(0,10)===new Date().toISOString().slice(0,10);
 const isMonth=s=>s?.slice(0,7)===new Date().toISOString().slice(0,7);
 const catOf=id=>CATS.find(c=>c.id===id)||{name:id,icon:"📦"};
 const mar=(s,b)=>b>0?((s-b)/b*100).toFixed(0):0;
-const lsGet=(k,def)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch{return def;}};
-const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}};
+const ls=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
+const lsw=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const LOGO=html`<svg width="38" height="38" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="18" fill="#0d3d4f"/>
+  <rect x="22" y="38" width="36" height="24" rx="2" fill="#b08030"/>
+  <rect x="18" y="32" width="44" height="8" rx="2" fill="#c9952a"/>
+  <rect x="26" y="42" width="8" height="7" rx="1" fill="#e8c96a"/>
+  <rect x="46" y="42" width="8" height="7" rx="1" fill="#e8c96a"/>
+  <rect x="34" y="50" width="12" height="12" rx="1" fill="#7a5520"/>
+  <path d="M12 28 Q8 24 10 19 L13 22 L16 19 Q20 21 18 26 L14 30Z" fill="#f5a623"/>
+  <rect x="56" y="18" width="14" height="6" rx="2" fill="#f5a623" transform="rotate(-35 56 18)"/>
+  <rect x="64" y="20" width="3" height="14" rx="1" fill="#f5a623" transform="rotate(-35 64 20)"/>
+  <circle cx="40" cy="67" r="5" fill="none" stroke="#f5a623" stroke-width="2.5"/>
+  <circle cx="20" cy="18" r="2" fill="#f5e642" opacity=".7"/>
+</svg>`;
 
-// ── GITHUB API ────────────────────────────────────────────────
+// ── GITHUB ────────────────────────────────────────────────────
 async function ghLoad(cfg){
-  const url=`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/main/data.json?t=${Date.now()}`;
-  const r=await fetch(url);
-  if(!r.ok) throw new Error("Veri yüklenemedi");
+  const r=await fetch(`https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/main/data.json?t=${Date.now()}`);
+  if(!r.ok)throw new Error("GitHub veri yüklenemedi");
   return r.json();
 }
 async function ghSave(cfg,data){
-  const headers={"Authorization":`token ${cfg.token}`,"Content-Type":"application/json","User-Agent":"UstaYapi-PWA"};
-  // get sha
-  const meta=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,{headers});
-  const mj=await meta.json();
-  if(!mj.sha) throw new Error("SHA alınamadı");
-  const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+  const hdrs={"Authorization":`token ${cfg.token}`,"Content-Type":"application/json","User-Agent":"UstaYapi-PWA"};
+  const m=await(await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,{headers:hdrs})).json();
+  if(!m.sha)throw new Error("SHA alınamadı");
   const res=await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/data.json`,{
-    method:"PUT",headers,
-    body:JSON.stringify({message:"UstaYapı: güncellendi",content,sha:mj.sha})
+    method:"PUT",headers:hdrs,
+    body:JSON.stringify({message:"UstaYapı güncellendi",content:btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2)))),sha:m.sha})
   });
-  if(!res.ok) throw new Error("Kayıt hatası");
+  if(!res.ok)throw new Error("Kayıt hatası: "+(await res.json()).message);
 }
 
-// ── LOGO ──────────────────────────────────────────────────────
-function Logo({size=48}){
-  return <svg width={size} height={size} viewBox="0 0 80 80" fill="none">
-    <rect width="80" height="80" rx="18" fill="#0d3d4f"/>
-    <rect x="22" y="38" width="36" height="24" rx="2" fill="#b08030"/>
-    <rect x="18" y="32" width="44" height="8" rx="2" fill="#c9952a"/>
-    <rect x="26" y="42" width="8" height="7" rx="1" fill="#e8c96a"/>
-    <rect x="46" y="42" width="8" height="7" rx="1" fill="#e8c96a"/>
-    <rect x="34" y="50" width="12" height="12" rx="1" fill="#7a5520"/>
-    <path d="M12 28 Q8 24 10 19 L13 22 L16 19 Q20 21 18 26 L14 30Z" fill="#f5a623"/>
-    <rect x="56" y="18" width="14" height="6" rx="2" fill="#f5a623" transform="rotate(-35 56 18)"/>
-    <rect x="64" y="20" width="3" height="14" rx="1" fill="#f5a623" transform="rotate(-35 64 20)"/>
-    <circle cx="40" cy="67" r="5" fill="none" stroke="#f5a623" strokeWidth="2.5"/>
-    <circle cx="20" cy="18" r="2" fill="#f5e642" opacity="0.7"/>
-    <circle cx="60" cy="15" r="1.5" fill="#f5e642" opacity="0.6"/>
-  </svg>;
-}
-
-// ── BARCODE ───────────────────────────────────────────────────
-function Barcode({value="",height=44}){
-  const bars=useMemo(()=>{
-    const s=(value||"").padEnd(8,"0").slice(0,12);
-    const r=[];
-    let ib=true;
-    r.push({w:2,b:true});r.push({w:1,b:false});r.push({w:2,b:true});
-    for(let i=0;i<s.length;i++){
-      const c=s.charCodeAt(i)%10;
-      r.push({w:[3,2,1,1,2,3,2,1,3,1][c]||2,b:ib});
-      r.push({w:[2,1,1,1,1,2,1,1,2,1][c]||1,b:!ib});
-      ib=!ib;
-    }
-    r.push({w:2,b:true});r.push({w:1,b:false});r.push({w:2,b:true});
-    return r;
-  },[value]);
-  const total=bars.reduce((s,b)=>s+b.w,0);
-  const W=150;const sc=W/total;let x=0;
-  return <div style={{textAlign:"center"}}>
-    <svg width={W} height={height}>
-      {bars.map((b,i)=>{const bx=x;x+=b.w*sc;return b.b?<rect key={i} x={bx} y={0} width={b.w*sc} height={height-10} fill="#000"/>:null;})}
-      <text x={W/2} y={height} textAnchor="middle" fontSize={8} fontFamily="monospace" fill="#333">{value}</text>
-    </svg>
-  </div>;
-}
-
-// ── UI PRIMITIVES ──────────────────────────────────────────────
-function Btn({children,onClick,v="primary",size="md",disabled,full,sx}){
-  const P={sm:"6px 12px",md:"10px 20px",lg:"13px 28px"};
-  const F={sm:12,md:14,lg:15};
-  const V={primary:{background:C.accent,color:"#0a0800",border:"none"},
-    ghost:{background:"transparent",color:C.sub,border:`1px solid ${C.border}`},
-    danger:{background:C.dangerBg,color:C.danger,border:`1px solid ${C.dangerBorder}`},
-    success:{background:C.successBg,color:C.success,border:`1px solid ${C.successBorder}`},
-    blue:{background:C.blueBg,color:C.blue,border:`1px solid ${C.blueBorder}`},
-    purple:{background:C.purpleBg,color:C.purple,border:`1px solid ${C.purpleBorder}`},
-  };
-  return <button onClick={onClick} disabled={disabled} style={{...V[v],padding:P[size],fontSize:F[size],borderRadius:10,fontWeight:700,cursor:disabled?"not-allowed":"pointer",opacity:disabled?.5:1,fontFamily:"inherit",width:full?"100%":undefined,display:"inline-flex",alignItems:"center",justifyContent:"center",gap:6,whiteSpace:"nowrap",...sx}}>{children}</button>;
-}
-function Inp({value,onChange,type="text",placeholder,min,max,step,sx,onKeyDown}){
-  return <input type={type} value={value} onChange={e=>onChange(e.target.value)} onKeyDown={onKeyDown} placeholder={placeholder} min={min} max={max} step={step}
-    style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit",width:"100%",boxSizing:"border-box",...sx}}/>;
-}
-function Sel({value,onChange,children,sx}){
-  return <select value={value} onChange={e=>onChange(e.target.value)} style={{background:C.bg,border:`1px solid ${C.border}`,borderRadius:10,padding:"10px 14px",color:C.text,fontSize:14,outline:"none",fontFamily:"inherit",width:"100%",...sx}}>{children}</select>;
-}
-function Field({label,children,sx}){
-  return <div style={{display:"flex",flexDirection:"column",gap:6,...sx}}>
-    {label&&<label style={{fontSize:11,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:0.7}}>{label}</label>}
-    {children}
-  </div>;
-}
-function Badge({children,color="muted"}){
-  const M={accent:{bg:C.accentBg,c:C.accent},success:{bg:C.successBg,c:C.success},danger:{bg:C.dangerBg,c:C.danger},blue:{bg:C.blueBg,c:C.blue},purple:{bg:C.purpleBg,c:C.purple},muted:{bg:"rgba(74,85,104,0.15)",c:C.muted}};
-  const {bg,c}=M[color]||M.muted;
-  return <span style={{background:bg,color:c,padding:"3px 10px",borderRadius:20,fontSize:11,fontWeight:700,whiteSpace:"nowrap"}}>{children}</span>;
-}
-function Card({children,sx,onClick}){
-  return <div onClick={onClick} style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:14,padding:20,cursor:onClick?"pointer":undefined,...sx}}>{children}</div>;
-}
-function Modal({title,onClose,children,width=540}){
-  return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000,padding:16}}>
-    <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:18,width:"100%",maxWidth:width,maxHeight:"92vh",overflowY:"auto"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"18px 22px",borderBottom:`1px solid ${C.border}`,position:"sticky",top:0,background:C.card,zIndex:1}}>
-        <span style={{fontSize:16,fontWeight:800,color:C.text}}>{title}</span>
-        <button onClick={onClose} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:24,lineHeight:1}}>×</button>
+// ── MODAL ─────────────────────────────────────────────────────
+function Modal({title,onClose,children,maxWidth=540}){
+  return html`<div class="modal-bg" onClick=${e=>e.target===e.currentTarget&&onClose()}>
+    <div class="modal" style="max-width:${maxWidth}px">
+      <div class="modal-hd">
+        <span style="font-size:16px;font-weight:800">${title}</span>
+        <button class="btn btn-ghost btn-sm" onClick=${onClose} style="font-size:20px;padding:4px 10px">×</button>
       </div>
-      <div style={{padding:22}}>{children}</div>
+      <div class="modal-bd">${children}</div>
     </div>
-  </div>;
-}
-function StatCard({icon,label,value,color,sub}){
-  return <Card sx={{display:"flex",alignItems:"center",gap:14}}>
-    <div style={{width:44,height:44,borderRadius:12,background:`${color}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{icon}</div>
-    <div style={{minWidth:0}}>
-      <div style={{fontSize:10,color:C.muted,fontWeight:700,textTransform:"uppercase",letterSpacing:0.6,marginBottom:3}}>{label}</div>
-      <div style={{fontSize:16,fontWeight:800,color,fontFamily:"monospace",whiteSpace:"nowrap"}}>{value}</div>
-      {sub&&<div style={{fontSize:11,color:C.muted,marginTop:2}}>{sub}</div>}
-    </div>
-  </Card>;
+  </div>`;
 }
 
-// ── CONFIRM MODAL ─────────────────────────────────────────────
-function ConfirmModal({title,message,onConfirm,onCancel}){
-  return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:2000,padding:16}}>
-    <div style={{background:C.card,border:`1px solid ${C.dangerBorder}`,borderRadius:18,width:"100%",maxWidth:360,padding:32,textAlign:"center"}}>
-      <div style={{fontSize:40,marginBottom:12}}>🗑️</div>
-      <h3 style={{color:C.text,fontSize:17,fontWeight:800,marginBottom:8}}>{title}</h3>
-      <p style={{color:C.sub,fontSize:14,marginBottom:24,lineHeight:1.6}}>{message}</p>
-      <div style={{display:"flex",gap:10,justifyContent:"center"}}>
-        <Btn v="ghost" onClick={onCancel} sx={{minWidth:100}}>İptal</Btn>
-        <Btn v="danger" onClick={onConfirm} sx={{minWidth:120}}>🗑️ Evet, Sil</Btn>
+// ── CONFIRM ───────────────────────────────────────────────────
+function Confirm({title,msg,onOk,onCancel}){
+  return html`<div class="modal-bg">
+    <div class="modal" style="max-width:340px;text-align:center">
+      <div class="modal-bd" style="padding:32px">
+        <div style="font-size:42px;margin-bottom:12px">🗑️</div>
+        <h3 style="font-size:17px;font-weight:800;margin-bottom:8px">${title}</h3>
+        <p style="color:#7a8ba8;font-size:14px;margin-bottom:24px;line-height:1.6">${msg}</p>
+        <div class="flex gap8" style="justify-content:center">
+          <button class="btn btn-ghost btn-md" style="min-width:100px" onClick=${onCancel}>İptal</button>
+          <button class="btn btn-danger btn-md" style="min-width:120px" onClick=${onOk}>🗑️ Evet, Sil</button>
+        </div>
       </div>
     </div>
-  </div>;
-}
-
-// ── SAVE STATUS INDICATOR ─────────────────────────────────────
-function SaveStatus({status}){
-  if(status==="idle") return null;
-  const cfg={saving:{bg:C.accentBg,c:C.accent,t:"💾 Kaydediliyor..."},saved:{bg:C.successBg,c:C.success,t:"✓ Kaydedildi"},error:{bg:C.dangerBg,c:C.danger,t:"⚠️ Kayıt hatası"}};
-  const {bg,c,t}=cfg[status]||cfg.saving;
-  return <div style={{position:"fixed",bottom:24,left:"50%",transform:"translateX(-50%)",background:bg,border:`1px solid`,borderColor:status==="saved"?C.successBorder:status==="error"?C.dangerBorder:C.accentBorder,borderRadius:20,padding:"8px 20px",color:c,fontSize:13,fontWeight:700,zIndex:500,whiteSpace:"nowrap",boxShadow:"0 4px 20px rgba(0,0,0,0.4)"}}>
-    {t}
-  </div>;
+  </div>`;
 }
 
 // ── GITHUB SETUP ──────────────────────────────────────────────
-function GitHubSetup({onSave,onSkip}){
-  const [owner,setOwner]=useState("");
-  const [repo,setRepo]=useState("");
-  const [token,setToken]=useState("");
-  const [testing,setTesting]=useState(false);
-  const [err,setErr]=useState("");
+function GHSetup({onSave,onSkip}){
+  const [owner,setOwner]=useState('');
+  const [repo,setRepo]=useState('');
+  const [token,setToken]=useState('');
+  const [status,setStatus]=useState('');
   const test=async()=>{
-    if(!owner||!repo||!token){setErr("Tüm alanları doldurunuz!");return;}
-    setTesting(true);setErr("");
+    if(!owner||!repo||!token){setStatus('⚠️ Tüm alanları doldurun!');return}
+    setStatus('⏳ Test ediliyor...');
     try{
       const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`,{headers:{"Authorization":`token ${token}`,"User-Agent":"UstaYapi"}});
-      if(!r.ok) throw new Error("Repo bulunamadı veya token hatalı");
+      if(!r.ok)throw new Error('Repo bulunamadı veya token hatalı');
       onSave({owner,repo,token});
-    }catch(e){setErr(e.message);}
-    setTesting(false);
+    }catch(e){setStatus('❌ '+e.message)}
   };
-  return <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-    <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:20,padding:36,width:"100%",maxWidth:420}}>
-      <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><Logo size={60}/></div>
-      <h2 style={{color:C.accent,fontSize:22,fontWeight:800,textAlign:"center",marginBottom:4}}>UstaYapı</h2>
-      <p style={{color:C.muted,fontSize:13,textAlign:"center",marginBottom:28}}>GitHub ile veri senkronizasyonu</p>
-      <div style={{display:"flex",flexDirection:"column",gap:14}}>
-        <Field label="GitHub Kullanıcı Adı"><Inp value={owner} onChange={setOwner} placeholder="kullanici-adi"/></Field>
-        <Field label="Repository Adı"><Inp value={repo} onChange={setRepo} placeholder="ustayapi-data"/></Field>
-        <Field label="Personal Access Token">
-          <Inp value={token} onChange={setToken} type="password" placeholder="ghp_xxxxxxxxxxxx"/>
-        </Field>
-        <div style={{background:C.blueBg,border:`1px solid ${C.blueBorder}`,borderRadius:10,padding:"12px 14px",fontSize:12,color:C.sub,lineHeight:1.7}}>
-          <strong style={{color:C.blue}}>Token nasıl alınır?</strong><br/>
-          github.com → Settings → Developer settings → Personal access tokens → Generate new token → <em>repo</em> yetkisi seçin
+  return html`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="card" style="max-width:400px;width:100%">
+      <div style="text-align:center;margin-bottom:20px">
+        ${LOGO}
+        <h2 style="color:#f59e0b;font-size:22px;font-weight:800;margin:10px 0 4px">UstaYapı</h2>
+        <p style="color:#4a5568;font-size:13px">GitHub ile veri senkronizasyonu (opsiyonel)</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="field"><label>GitHub Kullanıcı Adı</label><input class="inp" value=${owner} onInput=${e=>setOwner(e.target.value)} placeholder="kullanici-adi"/></div>
+        <div class="field"><label>Repository Adı</label><input class="inp" value=${repo} onInput=${e=>setRepo(e.target.value)} placeholder="ustayapi-data"/></div>
+        <div class="field"><label>Personal Access Token</label><input class="inp" type="password" value=${token} onInput=${e=>setToken(e.target.value)} placeholder="ghp_xxxxxxxxxxxx"/></div>
+        <div style="background:rgba(79,156,249,.08);border:1px solid rgba(79,156,249,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#7a8ba8;line-height:1.7">
+          <strong style="color:#4f9cf9">Token:</strong> github.com → Settings → Developer settings → Personal access tokens → <em>repo</em> yetkisi
         </div>
-        {err&&<p style={{color:C.danger,fontSize:13,textAlign:"center"}}>{err}</p>}
-        <Btn onClick={test} full disabled={testing}>{testing?"⏳ Test ediliyor...":"🔗 Bağlan ve Başla"}</Btn>
-        <button onClick={onSkip} style={{background:"none",border:"none",color:C.muted,fontSize:13,cursor:"pointer",padding:"8px",textDecoration:"underline"}}>
+        ${status&&html`<p style="font-size:13px;text-align:center;color:${status.includes('✅')?'#10d98a':status.includes('❌')?'#f05252':'#f59e0b'}">${status}</p>`}
+        <button class="btn btn-primary btn-md btn-full" onClick=${test}>🔗 Bağlan ve Başla</button>
+        <button onClick=${onSkip} style="background:none;border:none;color:#4a5568;font-size:13px;cursor:pointer;padding:8px;text-decoration:underline">
           GitHub olmadan devam et (sadece bu cihaz)
         </button>
       </div>
     </div>
-  </div>;
+  </div>`;
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────
-function LoginScreen({onLogin}){
-  const [user,setUser]=useState("");const [pass,setPass]=useState("");const [err,setErr]=useState("");
-  const go=()=>{const s=STAFF.find(x=>x.username===user&&x.password===pass);if(s){setErr("");onLogin(s);}else setErr("Kullanıcı adı veya şifre hatalı!");};
-  return <div style={{minHeight:"100vh",background:C.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
-    <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:20,padding:40,width:"100%",maxWidth:360,textAlign:"center"}}>
-      <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><Logo size={68}/></div>
-      <h1 style={{color:C.accent,fontSize:24,fontWeight:800,marginBottom:4,letterSpacing:-0.5}}>UstaYapı</h1>
-      <p style={{color:C.muted,fontSize:12,marginBottom:28}}>Stok & Müşteri Yönetim Sistemi</p>
-      <div style={{display:"flex",flexDirection:"column",gap:14,textAlign:"left"}}>
-        <Field label="Kullanıcı Adı"><Inp value={user} onChange={v=>{setUser(v);setErr("");}} placeholder="kullanici" onKeyDown={e=>e.key==="Enter"&&go()}/></Field>
-        <Field label="Şifre"><Inp value={pass} onChange={v=>{setPass(v);setErr("");}} type="password" placeholder="••••" onKeyDown={e=>e.key==="Enter"&&go()}/></Field>
-        {err&&<p style={{color:C.danger,fontSize:13,textAlign:"center"}}>{err}</p>}
-        <Btn onClick={go} full sx={{marginTop:6}}>🔐 Giriş Yap</Btn>
+function Login({onLogin}){
+  const [u,setU]=useState('');const [p,setP]=useState('');const [err,setErr]=useState('');
+  const go=()=>{const s=STAFF.find(x=>x.username===u&&x.password===p);if(s){setErr('');onLogin(s)}else setErr('Kullanıcı adı veya şifre hatalı!')};
+  return html`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="card" style="max-width:340px;width:100%;text-align:center">
+      <div style="display:flex;justify-content:center;margin-bottom:14px">${LOGO}</div>
+      <h1 style="color:#f59e0b;font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-.5px">UstaYapı</h1>
+      <p style="color:#4a5568;font-size:12px;margin-bottom:28px">Stok & Müşteri Yönetim Sistemi</p>
+      <div style="display:flex;flex-direction:column;gap:14px;text-align:left">
+        <div class="field"><label>Kullanıcı Adı</label><input class="inp" value=${u} onInput=${e=>{setU(e.target.value);setErr('')}} placeholder="kullanici" onKeyDown=${e=>e.key==='Enter'&&go()}/></div>
+        <div class="field"><label>Şifre</label><input class="inp" type="password" value=${p} onInput=${e=>{setP(e.target.value);setErr('')}} placeholder="••••" onKeyDown=${e=>e.key==='Enter'&&go()}/></div>
+        ${err&&html`<p style="color:#f05252;font-size:13px;text-align:center">${err}</p>`}
+        <button class="btn btn-primary btn-md btn-full" style="margin-top:4px" onClick=${go}>🔐 Giriş Yap</button>
       </div>
-      <p style={{color:C.muted,fontSize:11,marginTop:20}}>admin/1234 · ahmet/1234</p>
+      <p style="color:#4a5568;font-size:11px;margin-top:20px">admin/1234 · ahmet/1234</p>
     </div>
-  </div>;
+  </div>`;
 }
 
 // ── URUN MODAL ────────────────────────────────────────────────
 function UrunModal({product,suppliers,onSave,onClose}){
-  const [code,setCode]=useState(product?.code||"");
-  const [name,setName]=useState(product?.name||"");
-  const [cat,setCat]=useState(product?.cat||"hirdavat");
-  const [stock,setStock]=useState(String(product?.stock??0));
-  const [minS,setMinS]=useState(String(product?.minStock??5));
-  const [buy,setBuy]=useState(String(product?.buyPrice??""));
-  const [sell,setSell]=useState(String(product?.sellPrice??""));
-  const [unit,setUnit]=useState(product?.unit||"adet");
-  const [suppId,setSuppId]=useState(product?.supplierId||"");
-  const [imgUrl,setImgUrl]=useState(product?.image||"");
-  const [showBC,setShowBC]=useState(false);
-  const m=buy&&sell&&Number(buy)>0?((Number(sell)-Number(buy))/Number(buy)*100).toF
+  const [f,setF]=useState({
+    code:product?.code||'',name:product?.name||'',cat:product?.cat||'hirdavat',
+    stock:String(product?.stock??0),minStock:String(product?.minStock??5),
+    buyPrice:String(product?.buyPrice||''),sellPrice:String(product?.sellPrice||''),
+    unit:product?.unit||'adet',supplierId:product?.supplierId||'',image:product?.image||''
+  });
+  const up=(k,v)=>setF(x=>({...x,[k]:v}));
+  const m=f.buyPrice&&f.sellPrice&&Number(f.buyPrice)>0?((Number(f.sellPrice)-Number(f.buyPrice))/Number(f.buyPrice)*100).toFixed(0):null;
+  const submit=()=>{
+    if(!f.name.trim())return alert('Ürün adı zorunludur!');
+    if(!f.sellPrice)return alert('Satış fiyatı zorunludur!');
+    onSave({...f,stock:Number(f.stock)||0,minStock:Number(f.minStock)||0,buyPrice:Number(f.buyPrice)||0,sellPrice:Number(f.sellPrice)});
+  };
+  return html`<${Modal} title=${product?'✏️ Ürün Düzenle':'📦 Yeni Ürün'} onClose=${onClose} maxWidth=${600}>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="grid2">
+        <div class="field"><label>Stok Kodu</label><input class="inp" value=${f.code} onInput=${e=>up('code',e.target.value)} placeholder="BRU001"/></div>
+        <div class="field"><label>Ürün Adı *</label><input class="inp" value=${f.name} onInput=${e=>up('name',e.target.value)} placeholder="Ürün adı..."/></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Kategori</label><select class="sel" value=${f.cat} onChange=${e=>up('cat',e.target.value)}>${CATS.map(c=>html`<option value=${c.id}>${c.icon} ${c.name}</option>`)}</select></div>
+        <div class="field"><label>Birim</label><select class="sel" value=${f.unit} onChange=${e=>up('unit',e.target.value)}>${UNITS.map(u=>html`<option value=${u}>${u}</option>`)}</select></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Mevcut Stok</label><input class="inp" type="number" min="0" value=${f.stock} onInput=${e=>up('stock',e.target.value)}/></div>
+        <div class="field"><label>Min. Uyarı Seviyesi</label><input class="inp" type="number" min="0" value=${f.minStock} onInput=${e=>up('minStock',e.target.value)}/></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Alış Fiyatı (₺)</label><input class="inp" type="number" min="0" step=".01" value=${f.buyPrice} onInput=${e=>up('buyPrice',e.target.value)} placeholder="0.00"/></div>
+        <div class="field"><label>Satış Fiyatı (₺) *</label><input class="inp" type="number" min="0" step=".01" value=${f.sellPrice} onInput=${e=>up('sellPrice',e.target.value)} placeholder="0.00"/></div>
+      </div>
+      ${m!==null&&html`<div style="background:${Number(m)>=20?'rgba(16,217,138,.08)':Number(m)>=10?'rgba(245,158,11,.09)':'rgba(240,82,82,.08)'};border:1px solid ${Number(m)>=20?'rgba(16,217,138,.25)':Number(m)>=10?'rgba(245,158,11,.28)':'rgba(240,82,82,.25)'};border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <span style="color:#7a8ba8;font-size:13px">Kâr Marjı</span>
+        <span style="font-size:17px;font-weight:800;color:${Number(m)>=20?'#10d98a':Number(m)>=10?'#f59e0b':'#f05252'}">%${m} · ${tl(Number(f.sellPrice)-Number(f.buyPrice))}/birim</span>
+      </div>`}
+      <div class="field"><label>Resim URL (opsiyonel)</label><input class="inp" value=${f.image} onInput=${e=>up('image',e.target.value)} placeholder="https://...jpg"/></div>
+      ${f.image&&html`<img src=${f.image} alt="Ürün" style="width:72px;height:72px;object-fit:cover;border-radius:10px;border:1px solid #1b2438" onError=${e=>e.target.style.display='none'}/>`}
+      <div class="field"><label>Tedarikçi</label><select class="sel" value=${f.supplierId} onChange=${e=>up('supplierId',e.target.value)}><option value="">— Seçiniz —</option>${suppliers.map(s=>html`<option value=${s.id}>${s.name}</option>`)}</select></div>
+      <div class="flex gap8" style="justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-ghost btn-md" onClick=${onClose}>İptal</button>
+        <button class="btn btn-primary btn-md" onClick=${submit}>💾 Kaydet</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── MÜŞTERİ MODAL ────────────────────────────────────────────
+function MusteriModal({onSave,onClose}){
+  const [n,setN]=useState('');const [p,setP]=useState('');const [a,setA]=useState('');const [nt,setNt]=useState('');const [err,setErr]=useState('');
+  const submit=()=>{if(!n.trim()){setErr('Ad zorunludur!');return} onSave({name:n.trim(),phone:p,address:a,note:nt})};
+  return html`<${Modal} title="👤 Yeni Müşteri Ekle" onClose=${onClose}>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="field">
+        <label>Ad Soyad / Firma Adı *</label>
+        <input class="inp" value=${n} onInput=${e=>{setN(e.target.value);setErr('')}} placeholder="Ahmet Yılmaz veya Kadir İnşaat Ltd." onKeyDown=${e=>e.key==='Enter'&&submit()}/>
+        ${err&&html`<span style="color:#f05252;font-size:12px">${err}</span>`}
+      </div>
+      <div class="field"><label>Telefon</label><input class="inp" value=${p} onInput=${e=>setP(e.target.value)} placeholder="0532 XXX XX XX" onKeyDown=${e=>e.key==='Enter'&&submit()}/></div>
+      <div class="field"><label>Adres</label><input class="inp" value=${a} onInput=${e=>setA(e.target.value)} placeholder="Mahalle, ilçe, şehir..."/></div>
+      <div class="field"><label>Not (opsiyonel)</label><input class="inp" value=${nt} onInput=${e=>setNt(e.target.value)} placeholder="Müşteri hakkında not..."/></div>
+      <div style="background:rgba(245,158,11,.09);border:1px solid rgba(245,158,11,.28);border-radius:10px;padding:10px 14px;font-size:12px;color:#7a8ba8">
+        💡 Telefon numarası WhatsApp fiş paylaşımında kullanılır.
+      </div>
+      <div class="flex gap8" style="justify-content:flex-end">
+        <button class="btn btn-ghost btn-md" onClick=${onClose}>İptal</button>
+        <button class="btn btn-primary btn-md" onClick=${submit}>👤 Müşteriyi Ekle</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── SATIŞ MODAL ───────────────────────────────────────────────
+function SatisModal({products,customer,onSave,onClose}){
+  const [rows,setRows]=useState([{pid:'',qty:'1'}]);
+  const [discVal,setDiscVal]=useState('0');const [discType,setDiscType]=useState('tl');const [note,setNote]=useState('');const [bc,setBc]=useState('');
+  const upd=(i,k,v)=>setRows(r=>r.map((x,j)=>j===i?{...x,[k]:v}:x));
+  const addByCode=code=>{const p=products.find(x=>x.code===code.trim().toUpperCase()||x.name.toLowerCase().includes(code.toLowerCase()));if(p){setRows(r=>[...r,{pid:p.id,qty:'1'}]);setBc('')}else alert('Bulunamadı: '+code)};
+  const sub=rows.reduce((s,r)=>{const p=products.find(x=>x.id===r.pid);return s+(p?p.sellPrice*Number(r.qty||0):0)},0);
+  const disc=discType==='pct'?sub*(Number(discVal)||0)/100:(Number(discVal)||0);
+  const total=Math.max(sub-disc,0);
+  const profit=rows.reduce((s,r)=>{const p=products.find(x=>x.id===r.pid);return s+(p?(p.sellPrice-p.buyPrice)*Number(r.qty||0):0)},0)-disc;
+  const submit=()=>{
+    const valid=rows.filter(r=>r.pid&&Number(r.qty)>0);
+    if(!valid.length)return alert('En az bir ürün seçiniz!');
+    for(const r of valid){const p=products.find(x=>x.id===r.pid);if(p&&Number(r.qty)>p.stock)return alert(`"${p.name}" stok yetersiz! (${p.stock} ${p.unit})`)}
+    const items=valid.map(r=>{const p=products.find(x=>x.id===r.pid);return{productId:p.id,name:p.name,qty:Number(r.qty),sellPrice:p.sellPrice,buyPrice:p.buyPrice,unit:p.unit}});
+    onSave(items,total,disc,note);
+  };
+  return html`<${Modal} title=${`🛒 Satış — ${customer.name}`} onClose=${onClose} maxWidth=${680}>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="field">
+        <label>🏷️ Kod / Barkod ile Ekle</label>
+        <div class="flex gap8">
+          <input class="inp" value=${bc} onInput=${e=>setBc(e.target.value)} placeholder="Ürün kodu veya adı gir, Enter..." onKeyDown=${e=>e.key==='Enter'&&bc&&addByCode(bc)}/>
+          <button class="btn btn-blue btn-md" style="white-space:nowrap" onClick=${()=>bc&&addByCode(bc)}>Ekle</button>
+        </div>
+      </div>
+      ${rows.map((row,i)=>{const p=products.find(x=>x.id===row.pid);return html`
+        <div style="display:grid;grid-template-columns:1fr 88px 88px 32px;gap:8px;align-items:end">
+          <div class="field">
+            ${i===0&&html`<label>Ürün</label>`}
+            <select class="sel" value=${row.pid} onChange=${e=>upd(i,'pid',e.target.value)}>
+              <option value="">— Seçiniz —</option>
+              ${CATS.map(cat=>{const ps=products.filter(pr=>pr.cat===cat.id&&pr.stock>0);if(!ps.length)return null;
+                return html`<optgroup label=${cat.icon+' '+cat.name}>${ps.map(pr=>html`<option value=${pr.id}>${pr.name} (${pr.stock} ${pr.unit}) — ${tl(pr.sellPrice)}</option>`)}</optgroup>`})}
+            </select>
+          </div>
+          <div class="field">
+            ${i===0&&html`<label>Miktar</label>`}
+            <input class="inp" type="number" min="1" value=${row.qty} onInput=${e=>upd(i,'qty',e.target.value)}/>
+          </div>
+          <div>
+            ${i===0&&html`<div style="font-size:11px;color:#4a5568;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Tutar</div>`}
+            <div style="color:#f59e0b;font-weight:700;font-size:14px;padding:10px 0">${p?tl(p.sellPrice*Number(row.qty||0)):'-'}</div>
+          </div>
+          <button onClick=${()=>setRows(r=>r.filter((_,j)=>j!==i))} style="background:rgba(240,82,82,.08);color:#f05252;border:none;border-radius:8px;padding:0 8px;cursor:pointer;height:40px;align-self:end;margin-top:${i===0?22:0}px">×</button>
+        </div>`})}
+      <button class="btn btn-ghost btn-sm" style="align-self:flex-start" onClick=${()=>setRows(r=>[...r,{pid:'',qty:'1'}])}>+ Satır Ekle</button>
+      <div class="grid2">
+        <div class="field"><label>İndirim</label><input class="inp" type="number" min="0" step=".01" value=${discVal} onInput=${e=>setDiscVal(e.target.value)}/></div>
+        <div class="field"><label>Tür</label><select class="sel" value=${discType} onChange=${e=>setDiscType(e.target.value)}><option value="tl">₺ TL</option><option value="pct">% Yüzde</option></select></div>
+      </div>
+      <div class="field"><label>Not</label><input class="inp" value=${note} onInput=${e=>setNote(e.target.value)} placeholder="Satış notu..."/></div>
+      <div style="background:rgba(255,255,255,.02);border:1px solid #1b2438;border-radius:12px;padding:14px">
+        <div class="row" style="font-size:13px;color:#7a8ba8;margin-bottom:5px"><span>Ara Toplam</span><span style="font-family:monospace">${tl(sub)}</span></div>
+        ${disc>0&&html`<div class="row" style="font-size:13px;color:#f05252;margin-bottom:5px"><span>İndirim</span><span style="font-family:monospace">−${tl(disc)}</span></div>`}
+        <div style="border-top:1px solid #1b2438;margin:8px 0"></div>
+        <div class="row"><span style="font-weight:800;font-size:15px">TOPLAM</span><span style="font-weight:800;color:#f59e0b;font-size:22px;font-family:monospace">${tl(total)}</span></div>
+        <div class="row" style="font-size:12px;color:${profit>=0?'#10d98a':'#f05252'};margin-top:5px"><span>Kâr</span><span style="font-weight:700;font-family:monospace">${tl(profit)}</span></div>
+      </div>
+      <div class="flex gap8" style="justify-content:flex-end">
+        <button class="btn btn-ghost btn-md" onClick=${onClose}>İptal</button>
+        <button class="btn btn-primary btn-md" onClick=${submit}>✅ Satışı Onayla</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── ÖDEME MODAL ───────────────────────────────────────────────
+function OdemeModal({title,balance,balLabel,balColor,onSave,onClose}){
+  const [amt,setAmt]=useState(balance>0?balance.toFixed(2):'');const [meth,setMeth]=useState('nakit');const [note,setNote]=useState('');
+  const submit=()=>{const a=Number(amt);if(!a||a<=0)return alert('Geçerli tutar giriniz!'); onSave(a,`${meth}${note?' — '+note:''}`)};
+  return html`<${Modal} title=${title} onClose=${onClose}>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:${balColor}10;border:1px solid ${balColor}30;border-radius:12px;padding:14px 18px">
+        <div style="font-size:11px;color:#4a5568;font-weight:700;text-transform:uppercase;margin-bottom:4px">${balLabel}</div>
+        <div style="font-size:24px;font-weight:800;color:${balColor};font-family:monospace">${balance>0?tl(balance):'Bakiye Yok'}</div>
+      </div>
+      <div class="field"><label>Tutar (₺)</label><input class="inp" type="number" min=".01" step=".01" value=${amt} onInput=${e=>setAmt(e.target.value)} placeholder="0.00"/></div>
+      <div class="field"><label>Yöntem</label><select class="sel" value=${meth} onChange=${e=>setMeth(e.target.value)}>${['nakit','havale','EFT','çek','kredi kartı','diğer'].map(m=>html`<option value=${m}>${m}</option>`)}</select></div>
+      <div class="field"><label>Not</label><input class="inp" value=${note} onInput=${e=>setNote(e.target.value)} placeholder="Ek not..."/></div>
+      <div class="flex gap8" style="justify-content:flex-end">
+        <button class="btn btn-ghost btn-md" onClick=${onClose}>İptal</button>
+        <button class="btn btn-success btn-md" onClick=${submit}>💰 Kaydet</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── FİŞ MODAL ─────────────────────────────────────────────────
+function FisModal({tx,customer,balance,onClose}){
+  const isSale=tx.type==='sale';
+  const doPrint=()=>{
+    const s=document.createElement('style');s.id='ps';
+    s.textContent='@media print{body>*{display:none!important}#print-area{display:block!important;position:fixed;top:0;left:0;width:100%;}}';
+    document.head.appendChild(s);window.print();
+    setTimeout(()=>document.getElementById('ps')?.remove(),1000);
+  };
+  const shareWA=()=>{
+    const raw=customer.phone?.replace(/\D/g,'')||'';
+    const phone=raw.startsWith('0')?'90'+raw.slice(1):raw.startsWith('90')?raw:raw?'90'+raw:'';
+    const lines=['🔧 *UstaYapı Mağazası*','━━━━━━━━━━━━━━━',`📅 ${dt(tx.date)}`,`👤 ${customer.name}`,customer.phone?`📞 ${customer.phone}`:'','━━━━━━━━━━━━━━━',
+      isSale?'🛒 *SATIŞ FİŞİ*':'💰 *ÖDEME MAKBUZU*','',
+      ...(isSale&&tx.items?tx.items.map(it=>`• ${it.name}\n  ${it.qty} ${it.unit} × ${tl(it.sellPrice)} = *${tl(it.qty*it.sellPrice)}*`):[]),
+      '',isSale&&tx.discount>0?`📉 İndirim: −${tl(tx.discount)}`:'',
+      `💵 *${isSale?'TOPLAM':'ÖDEME'}: ${tl(tx.amount)}*`,
+      `📊 *Bakiye: ${balance>0?tl(balance)+' BORÇ':balance<0?tl(Math.abs(balance))+' ALACAK':'Temiz ✓'}*`,
+      tx.note?`📝 ${tx.note}`:'','━━━━━━━━━━━━━━━','Teşekkür ederiz! 🙏 UstaYapı'
+    ].filter(Boolean).join('\n');
+    window.open((phone?`https://wa.me/${phone}`:'https://wa.me/')+`?text=${encodeURIComponent(lines)}`,'_blank');
+  };
+  return html`<${Modal} title="🖨️ Fiş / Makbuz" onClose=${onClose} maxWidth=${460}>
+    <div>
+      <div id="print-area" style="background:#fff;color:#111;border-radius:12px;padding:24px;font-family:'Courier New',monospace;font-size:13px;line-height:1.9;margin-bottom:16px">
+        <div style="text-align:center;font-weight:900;font-size:15px;margin-bottom:4px">🔧 UstaYapı Mağazası</div>
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        <div>📅 ${dt(tx.date)}</div><div>👤 ${customer.name}</div>
+        ${customer.phone&&html`<div>📞 ${customer.phone}</div>`}
+        ${customer.address&&html`<div>📍 ${customer.address}</div>`}
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        <div style="font-weight:800;font-size:14px;margin-bottom:8px">${isSale?'🛒 SATIŞ FİŞİ':'💰 ÖDEME MAKBUZU'}</div>
+        ${isSale&&tx.items?.map((it,i)=>html`<div key=${i} style="margin-bottom:6px">
+          <div style="font-weight:700">▸ ${it.name}</div>
+          <div style="padding-left:14px;color:#555;font-size:12px">${it.qty} ${it.unit} × ${tl(it.sellPrice)} = <strong>${tl(it.qty*it.sellPrice)}</strong></div>
+        </div>`)}
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        ${isSale&&tx.discount>0&&html`<div style="display:flex;justify-content:space-between;color:#c00;font-size:13px"><span>İndirim:</span><span>−${tl(tx.discount)}</span></div>`}
+        <div style="display:flex;justify-content:space-between;font-weight:800;font-size:15px"><span>${isSale?'TOPLAM:':'ÖDEME:'}</span><span>${tl(tx.amount)}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:13px">
+          <span>BAKİYE:</span>
+          <span style="color:${balance>0?'#c00':balance<0?'#060':'#000'};font-weight:700">${balance>0?tl(balance)+' BORÇ':balance<0?tl(Math.abs(balance))+' ALACAK':'Temiz ✓'}</span>
+        </div>
+        ${tx.note&&html`<div style="margin-top:6px;font-size:12px;color:#888">Not: ${tx.note}</div>`}
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        <div style="text-align:center;font-size:12px;color:#999">Teşekkür ederiz 🙏 İyi çalışmalar!</div>
+      </div>
+      <div class="flex gap8" style="margin-bottom:8px">
+        <button class="btn btn-blue btn-md btn-full" onClick=${doPrint}>🖨️ Yazdır / PDF</button>
+        <button class="btn btn-success btn-md btn-full" onClick=${shareWA}>📱 WhatsApp</button>
+      </div>
+      <button class="btn btn-ghost btn-md btn-full" onClick=${onClose}>Kapat</button>
+    </div>
+  </${Modal}>`;
+}
+
+// ── BORÇ HATIRLATMA ───────────────────────────────────────────
+function BorcModal({cust,balance,onClose}){
+  const [tip,setTip]=useState('nazik');
+  const S={
+    nazik:`Sayın ${cust.name},\n\nUstaYapı olarak hesabınızı inceledik. ${tl(balance)} tutarında bakiyeniz bulunmaktadır.\n\nÖdemeniz için iletişime geçebilirsiniz.\n\nSaygılarımızla,\nUstaYapı Mağazası 🔧`,
+    resmi:`${cust.name} Bey/Hanım,\n\nHesap ekstrenize göre ${tl(balance)} tutarında borcunuz mevcuttur. En kısa sürede ödemenizi bekliyoruz.\n\nUstaYapı`,
+    dost:`Merhaba ${cust.name.split(' ')[0]} 👋\n\nHesabında ${tl(balance)} bakiye var, uygun bir zamanda geçersen seviniriz 😊\n\nUstaYapı Ailesi 🔧`,
+  };
+  const msg=S[tip];
+  const raw=cust.phone?.replace(/\D/g,'')||'';
+  const phone=raw.startsWith('0')?'90'+raw.slice(1):raw.startsWith('90')?raw:raw?'90'+raw:'';
+  return html`<${Modal} title="💬 Borç Hatırlatma" onClose=${onClose} maxWidth=${480}>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.25);border-radius:10px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="color:#7a8ba8;font-size:13px">${cust.name}</span>
+        <span style="color:#f05252;font-weight:800;font-family:monospace">${tl(balance)} BORÇ</span>
+      </div>
+      <div class="field"><label>Mesaj Tonu</label>
+        <div class="flex gap8">
+          ${[{id:'nazik',l:'🤝 Nazik'},{id:'resmi',l:'📋 Resmi'},{id:'dost',l:'😊 Samimi'}].map(t=>html`
+            <button onClick=${()=>setTip(t.id)} style="flex:1;padding:8px;border-radius:10px;border:1px solid ${tip===t.id?'rgba(245,158,11,.28)':'#1b2438'};background:${tip===t.id?'rgba(245,158,11,.09)':'transparent'};color:${tip===t.id?'#f59e0b':'#7a8ba8'};font-size:12px;font-weight:${tip===t.id?700:500};cursor:pointer">${t.l}</button>`)}
+        </div>
+      </div>
+      <div style="background:#07090f;border:1px solid #1b2438;border-radius:12px;padding:14px;font-size:13px;color:#e8edf5;line-height:1.8;white-space:pre-wrap;min-height:120px">${msg}</div>
+      <div class="flex gap8">
+        <button class="btn btn-ghost btn-md btn-full" onClick=${()=>{navigator.clipboard?.writeText(msg);alert('Kopyalandı!')}}>📋 Kopyala</button>
+        <button class="btn btn-success btn-md btn-full" onClick=${()=>window.open((phone?`https://wa.me/${phone}`:'https://wa.me/')+`?text=${encodeURIComponent(msg)}`,'_blank')}>📱 WhatsApp</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── MÜŞTERİ DETAY ────────────────────────────────────────────
+function MusteriDetay({cust,txList,balance,custBal,onBack,onSatis,onOdeme,onFis,onDelete,onHatirlatma}){
+  const [filTip,setFilTip]=useState('hepsi');const [d1,setD1]=useState('');const [d2,setD2]=useState('');const [showFil,setShowFil]=useState(false);
+  const filtered=txList.filter(t=>(filTip==='hepsi'||t.type===filTip)&&(!d1||t.date.slice(0,10)>=d1)&&(!d2||t.date.slice(0,10)<=d2));
+  const sorted=[...txList].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  let run=0;const rbMap=Object.fromEntries(sorted.map(t=>{run+=t.type==='sale'?t.amount:-t.amount;return[t.id,run]}));
+  const displayed=[...filtered].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const tS=txList.filter(t=>t.type==='sale').reduce((s,t)=>s+t.amount,0);
+  const tP=txList.filter(t=>t.type==='payment').reduce((s,t)=>s+t.amount,0);
+  const hasF=filTip!=='hepsi'||d1||d2;
+  return html`<div>
+    <button style="background:none;border:none;color:#4a5568;cursor:pointer;font-size:13px;margin-bottom:18px;padding:0;display:flex;align-items:center;gap:6px" onClick=${onBack}>← Müşterilere Dön</button>
+    <div class="card" style="margin-bottom:16px">
+      <div class="row" style="flex-wrap:wrap;gap:14px;align-items:flex-start">
+        <div class="flex gap10" style="align-items:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(245,158,11,.09);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#f59e0b;flex-shrink:0">${cust.name.charAt(0)}</div>
+          <div>
+            <h2 style="font-size:18px;font-weight:800;margin:0">${cust.name}</h2>
+            ${cust.phone&&html`<div style="color:#4a5568;font-size:13px;margin-top:3px">📞 ${cust.phone}</div>`}
+            ${cust.address&&html`<div style="color:#4a5568;font-size:13px">📍 ${cust.address}</div>`}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:10px;color:#4a5568;text-transform:uppercase;font-weight:700;letter-spacing:.5px">Bakiye</div>
+          <div style="font-size:26px;font-weight:800;color:${balance>0?'#f05252':balance<0?'#10d98a':'#4a5568'};font-family:monospace">${tl(Math.abs(balance))}</div>
+          <span class="badge" style="background:${balance>0?'rgba(240,82,82,.08)':balance<0?'rgba(16,217,138,.08)':'rgba(74,85,104,.15)'};color:${balance>0?'#f05252':balance<0?'#10d98a':'#4a5568'}">${balance>0?'BORÇ':balance<0?'ALACAK':'Temiz'}</span>
+        </div>
+      </div>
+      <div class="grid3" style="margin-top:14px">
+        ${[{l:'Toplam Satış',v:tl(tS),c:'#f05252'},{l:'Toplam Ödeme',v:tl(tP),c:'#10d98a'},{l:'İşlem',v:txList.length,c:'#f59e0b'}].map(({l,v,c})=>html`
+          <div style="text-align:center;background:#07090f;border-radius:10px;padding:9px 0">
+            <div style="font-size:10px;color:#4a5568;text-transform:uppercase;font-weight:700">${l}</div>
+            <div style="font-size:14px;font-weight:800;color:${c};font-family:monospace">${v}</div>
+          </div>`)}
+      </div>
+      <div class="flex gap8" style="margin-top:14px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-md" onClick=${onSatis}>🛒 Satış Yap</button>
+        <button class="btn btn-success btn-md" onClick=${onOdeme}>💰 Ödeme Al</button>
+        ${balance>0&&html`<button class="btn btn-purple btn-md" onClick=${onHatirlatma}>💬 Hatırlatma</button>`}
+        ${onDelete&&html`<button class="btn btn-danger btn-md" onClick=${onDelete}>🗑️ Sil</button>`}
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:10px;flex-wrap:wrap;gap:8px">
+      <h3 style="font-size:15px;font-weight:700;margin:0">Hesap Hareketleri ${hasF&&html`<span style="font-size:12px;color:#f59e0b">(${displayed.length}/${txList.length})</span>`}</h3>
+      <div class="flex gap6">
+        ${hasF&&html`<button onClick=${()=>{setFilTip('hepsi');setD1('');setD2('')}} style="background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.25);border-radius:8px;padding:5px 10px;color:#f05252;font-size:11px;cursor:pointer">✕ Temizle</button>`}
+        <button onClick=${()=>setShowFil(!showFil)} style="background:${showFil?'rgba(245,158,11,.09)':'transparent'};border:1px solid ${showFil?'rgba(245,158,11,.28)':'#1b2438'};border-radius:8px;padding:5px 10px;color:${showFil?'#f59e0b':'#7a8ba8'};font-size:11px;cursor:pointer">🔍 Filtre</button>
+      </div>
+    </div>
+    ${showFil&&html`<div class="card" style="margin-bottom:10px;padding:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div class="field"><label>Tür</label><select class="sel" value=${filTip} onChange=${e=>setFilTip(e.target.value)}><option value="hepsi">Hepsi</option><option value="sale">Satış</option><option value="payment">Ödeme</option></select></div>
+        <div class="field"><label>Başlangıç</label><input class="inp" type="date" value=${d1} onInput=${e=>setD1(e.target.value)}/></div>
+        <div class="field"><label>Bitiş</label><input class="inp" type="date" value=${d2} onInput=${e=>setD2(e.target.value)}/></div>
+      </div>
+    </div>`}
+    ${displayed.length===0?html`<div class="card"><p style="color:#4a5568;text-align:center;margin:0">${hasF?'Filtreye uyan işlem yok.':'Henüz işlem yok.'}</p></div>`
+    :html`<div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto">
+      <table>
+        <thead><tr>${['Tarih','Tür','İçerik','Tutar','Bakiye',''].map(h=>html`<th>${h}</th>`)}</tr></thead>
+        <tbody>${displayed.map(tx=>{const rb=rbMap[tx.id]||0;return html`
+          <tr>
+            <td style="color:#4a5568;white-space:nowrap;font-size:11px">${dt(tx.date)}</td>
+            <td><span class="badge" style="background:${tx.type==='sale'?'rgba(240,82,82,.08)':'rgba(16,217,138,.08)'};color:${tx.type==='sale'?'#f05252':'#10d98a'}">${tx.type==='sale'?'🛒 Satış':'💰 Ödeme'}</span></td>
+            <td style="color:#7a8ba8;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${tx.type==='sale'&&tx.items?.length?tx.items.map(it=>it.name).join(', '):(tx.note||'—')}</td>
+            <td style="font-weight:700;color:${tx.type==='sale'?'#f05252':'#10d98a'};font-family:monospace;white-space:nowrap">${tx.type==='sale'?'+':'−'}${tl(tx.amount)}</td>
+            <td style="font-family:monospace;font-size:12px;color:${rb>0?'#f05252':rb<0?'#10d98a':'#4a5568'};white-space:nowrap">${tl(Math.abs(rb))} ${rb>0?'B':rb<0?'A':''}</td>
+            <td><button class="btn btn-ghost btn-sm" onClick=${()=>onFis(tx)}>🖨️</button></td>
+          </tr>`})}
+        </tbody>
+      </table>
+    </div></div>`}
+  </div>`;
+}
+
+// ── STOK SAYIM ────────────────────────────────────────────────
+function SayimPage({products,onSave}){
+  const [counts,setCounts]=useState(Object.fromEntries(products.map(p=>[p.id,String(p.stock)])));
+  const [saved,setSaved]=useState(false);
+  const diffs=products.filter(p=>Number(counts[p.id]||0)!==p.stock);
+  const submit=()=>{onSave(counts);setSaved(true);setTimeout(()=>setSaved(false),3000)};
+  return html`<div>
+    <div class="row" style="margin-bottom:18px;flex-wrap:wrap;gap:10px">
+      <div>
+        <h2 style="font-size:20px;font-weight:800;margin:0">📦 Stok Sayımı</h2>
+        <p style="color:#4a5568;font-size:12px;margin-top:3px">Fiili miktarları girin, sistemi güncelleyin</p>
+      </div>
+      <div class="flex gap10 align-center">
+        ${saved&&html`<span style="color:#10d98a;font-size:13px;font-weight:600">✅ Kaydedildi!</span>`}
+        <button class="btn btn-primary btn-md" onClick=${submit}>💾 Sayımı Kaydet</button>
+      </div>
+    </div>
+    ${diffs.length>0&&html`<div style="background:rgba(245,158,11,.09);border:1px solid rgba(245,158,11,.28);border-radius:10px;padding:10px 14px;margin-bottom:14px">
+      <p style="color:#f59e0b;font-weight:700;font-size:13px;margin:0">⚠️ ${diffs.length} üründe fark var</p>
+    </div>`}
+    <div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto">
+      <table>
+        <thead><tr>${['Ürün','Kategori','Sistem Stok','Fiili Sayım','Fark'].map(h=>html`<th>${h}</th>`)}</tr></thead>
+        <tbody>${products.map(p=>{const cnt=Number(counts[p.id]||0);const diff=cnt-p.stock;return html`
+          <tr style="background:${diff!==0?diff>0?'rgba(16,217,138,.04)':'rgba(240,82,82,.04)':'transparent'}">
+            <td style="font-weight:600">${p.name}</td>
+            <td><span class="badge" style="background:rgba(74,85,104,.15);color:#4a5568">${catOf(p.cat).icon}</span></td>
+            <td style="color:#7a8ba8">${p.stock} ${p.unit}</td>
+            <td>
+              <input type="number" min="0" value=${counts[p.id]||'0'} onInput=${e=>setCounts(c=>({...c,[p.id]:e.target.value}))}
+                style="background:#07090f;border:1px solid ${diff!==0?'rgba(245,158,11,.28)':'#1b2438'};border-radius:8px;padding:6px 10px;color:#e8edf5;font-size:13px;width:80px;font-family:inherit;outline:none"/>
+              <span style="color:#4a5568;font-size:12px;margin-left:5px">${p.unit}</span>
+            </td>
+            <td style="font-weight:700;color:${diff>0?'#10d98a':diff<0?'#f05252':'#4a5568'};font-family:monospace">${diff!==0?(diff>0?'+':'')+diff:'—'}</td>
+          </tr>`})}
+        </tbody>
+      </table>
+    </div></div>
+  </div>`;
+}
+
+// ── GÜNLÜK RAPOR ──────────────────────────────────────────────
+function GunlukModal({custTx,customers,onClose}){
+  const [tarih,setTarih]=useState(new Date().toISOString().slice(0,10));
+  const txList=custTx.filter(t=>t.date.slice(0,10)===tarih);
+  const sales=txList.filter(t=>t.type==='sale');
+  const pays=txList.filter(t=>t.type==='payment');
+  const tS=sales.reduce((s,t)=>s+t.amount,0);
+  const tP=pays.reduce((s,t)=>s+t.amount,0);
+  const tK=sales.reduce((s,t)=>s+(t.items?.reduce((ps,it)=>(it.sellPrice-it.buyPrice)*it.qty+ps,0)||0)-(t.discount||0),0);
+  const doPrint=()=>{
+    const s=document.createElement('style');s.id='gps';
+    s.textContent='@media print{body>*{display:none!important}#gp{display:block!important;position:fixed;top:0;left:0;width:100%;background:#fff;color:#000;padding:20px;font-family:monospace;}}';
+    document.head.appendChild(s);window.print();
+    setTimeout(()=>document.getElementById('gps')?.remove(),1000);
+  };
+  return html`<${Modal} title="🖨️ Günlük Satış Raporu" onClose=${onClose} maxWidth=${520}>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="field"><label>Tarih</label><input class="inp" type="date" value=${tarih} onInput=${e=>setTarih(e.target.value)}/></div>
+      <div id="gp" style="background:#fff;color:#111;border-radius:12px;padding:20px;font-family:'Courier New',monospace;font-size:12px;line-height:1.9;max-height:380px;overflow-y:auto">
+        <div style="text-align:center;font-weight:900;font-size:15px;margin-bottom:4px">🔧 UstaYapı Mağazası</div>
+        <div style="text-align:center;font-weight:700;margin-bottom:6px">${new Date(tarih).toLocaleDateString('tr-TR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        ${[['Toplam Satış',tl(tS)],['Toplam Ödeme',tl(tP)],['Kâr',tl(tK)],['İşlem Sayısı',txList.length]].map(([l,v])=>html`
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span>${l}:</span><strong>${v}</strong></div>`)}
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        <div style="font-weight:800;margin-bottom:6px">SATIŞ (${sales.length})</div>
+        ${sales.length===0?html`<div style="color:#888">Satış yok.</div>`:sales.map((tx,i)=>{const c=customers.find(x=>x.id===tx.customerId);return html`
+          <div style="margin-bottom:7px;padding-bottom:7px;border-bottom:${i<sales.length-1?'1px dashed #eee':'none'}">
+            <div style="display:flex;justify-content:space-between"><span style="font-weight:700">${c?.name}</span><span style="font-weight:700">${tl(tx.amount)}</span></div>
+            ${tx.items?.map((it,j)=>html`<div key=${j} style="padding-left:10px;color:#555;font-size:11px">▸ ${it.name}: ${it.qty} ${it.unit} × ${tl(it.sellPrice)}</div>`)}
+          </div>`})}
+        ${pays.length>0&&html`
+          <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+          <div style="font-weight:800;margin-bottom:6px">ÖDEMELER (${pays.length})</div>
+          ${pays.map(tx=>{const c=customers.find(x=>x.id===tx.customerId);return html`
+            <div style="display:flex;justify-content:space-between"><span>${c?.name}</span><span style="font-weight:700;color:#060">${tl(tx.amount)}</span></div>`})}`}
+        <div style="border-top:2px dashed #ccc;margin:8px 0"></div>
+        <div style="text-align:center;font-size:11px;color:#999">UstaYapı · Günlük Kapanış Raporu</div>
+      </div>
+      <div class="flex gap8">
+        <button class="btn btn-ghost btn-md btn-full" onClick=${onClose}>Kapat</button>
+        <button class="btn btn-blue btn-md btn-full" onClick=${doPrint}>🖨️ Yazdır / PDF</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── ETİKET MODAL ──────────────────────────────────────────────
+function EtiketModal({products,onClose}){
+  const [selIds,setSelIds]=useState([]);const [copies,setCopies]=useState('1');const [search,setSearch]=useState('');
+  const toggle=id=>setSelIds(s=>s.includes(id)?s.filter(x=>x!==id):[...s,id]);
+  const fp=products.filter(p=>p.name.toLowerCase().includes(search.toLowerCase())||p.code?.toLowerCase().includes(search.toLowerCase()));
+  const print=()=>{
+    if(!selIds.length)return alert('En az bir ürün seçiniz!');
+    const n=Number(copies)||1;
+    const labels=selIds.map(id=>products.find(p=>p.id===id)).filter(Boolean).flatMap(p=>Array(n).fill(p));
+    const w=window.open('','_blank');
+    w.document.write(`<html><head><title>Etiket</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Courier New',monospace}.g{display:flex;flex-wrap:wrap;gap:6px;padding:10px}.l{width:160px;height:90px;border:2px dashed #ccc;border-radius:6px;padding:8px;display:flex;flex-direction:column;justify-content:space-between}.s{font-size:9px;color:#888}.n{font-size:11px;font-weight:bold;line-height:1.2;max-height:28px;overflow:hidden}.c{font-size:9px;color:#666}.p{font-size:20px;font-weight:900;text-align:right}.u{font-size:9px;color:#888;text-align:right}@media print{body{-webkit-print-color-adjust:exact}}</style></head><body><div class="g">${labels.map(p=>`<div class="l"><div class="s">🔧 UstaYapı</div><div class="n">${p.name}</div><div class="c">${p.code||''}</div><div><div class="p">${new Intl.NumberFormat('tr-TR',{minimumFractionDigits:2}).format(p.sellPrice)} ₺</div><div class="u">/ ${p.unit}</div></div></div>`).join('')}</div><script>window.onload=()=>{window.print();window.close()}<\/script></body></html>`);
+    w.document.close();
+  };
+  return html`<${Modal} title="🏷️ Fiyat Etiketi" onClose=${onClose} maxWidth=${520}>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 90px;gap:8px">
+        <input class="inp" value=${search} onInput=${e=>setSearch(e.target.value)} placeholder="🔍 Ürün ara..."/>
+        <div class="field"><label>Kopya</label><input class="inp" type="number" min="1" max="10" value=${copies} onInput=${e=>setCopies(e.target.value)}/></div>
+      </div>
+      <div style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:6px">
+        ${fp.map(p=>html`
+          <div onClick=${()=>toggle(p.id)} style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:${selIds.includes(p.id)?'rgba(245,158,11,.09)':'#07090f'};border:1px solid ${selIds.includes(p.id)?'rgba(245,158,11,.28)':'#1b2438'};border-radius:10px;cursor:pointer">
+            <div class="flex gap8">
+              <div style="width:20px;height:20px;border-radius:5px;border:2px solid ${selIds.includes(p.id)?'#f59e0b':'#1b2438'};background:${selIds.includes(p.id)?'#f59e0b':'transparent'};display:flex;align-items:center;justify-content:center;font-size:11px;color:#000;font-weight:800;flex-shrink:0">${selIds.includes(p.id)?'✓':''}</div>
+              <div>
+                <div style="font-size:13px;font-weight:600">${p.name}</div>
+                <div style="font-size:11px;color:#4a5568">${p.code} · ${p.unit}</div>
+              </div>
+            </div>
+            <span style="color:#f59e0b;font-weight:800;font-family:monospace;flex-shrink:0">${tl(p.sellPrice)}</span>
+          </div>`)}
+      </div>
+      <div class="flex gap8" style="align-items:center">
+        <button onClick=${()=>setSelIds(fp.map(p=>p.id))} class="btn btn-ghost btn-sm">Tümü</button>
+        <button onClick=${()=>setSelIds([])} class="btn btn-ghost btn-sm">Temizle</button>
+        <span style="color:#4a5568;font-size:12px;flex:1">${selIds.length} seçildi</span>
+        <button class="btn btn-primary btn-md" onClick=${print} disabled=${!selIds.length}>🖨️ Yazdır</button>
+      </div>
+    </div>
+  </${Modal}>`;
+}
+
+// ── AYARLAR ───────────────────────────────────────────────────
+function AyarlarPage({ghCfg,onUpdateGh,onClearGh}){
+  const [owner,setOwner]=useState(ghCfg?.owner||'');
+  const [repo,setRepo]=useState(ghCfg?.repo||'');
+  const [token,setToken]=useState(ghCfg?.token||'');
+  const [status,setStatus]=useState('');
+  const test=async()=>{
+    if(!owner||!repo||!token){setStatus('⚠️ Tüm alanları doldurun!');return}
+    setStatus('⏳ Test ediliyor...');
+    try{
+      const r=await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json`,{headers:{"Authorization":`token ${token}`,"User-Agent":"UstaYapi"}});
+      if(!r.ok)throw new Error('Repo bulunamadı veya token hatalı');
+      onUpdateGh({owner,repo,token});setStatus('✅ Bağlantı başarılı!');
+    }catch(e){setStatus('❌ '+e.message)}
+  };
+  return html`<div>
+    <h2 style="font-size:20px;font-weight:800;margin-bottom:20px">⚙️ Ayarlar</h2>
+    <div class="card" style="margin-bottom:14px">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:12px">
+        ☁️ GitHub Sync ${ghCfg?html`<span class="badge" style="background:rgba(16,217,138,.08);color:#10d98a">✓ Aktif</span>`:html`<span class="badge" style="background:rgba(74,85,104,.15);color:#4a5568">Pasif</span>`}
+      </h3>
+      <div style="background:rgba(79,156,249,.08);border:1px solid rgba(79,156,249,.25);border-radius:10px;padding:12px 14px;font-size:12px;color:#7a8ba8;line-height:1.7;margin-bottom:14px">
+        <strong style="color:#4f9cf9">Nasıl kurulur?</strong><br/>
+        1. github.com → New repository → <strong>ustayapi-data</strong><br/>
+        2. Bu projedeki data.json'ı repoya yükle<br/>
+        3. Settings → Developer settings → Personal access tokens → <strong>repo</strong> yetkili token al<br/>
+        4. Aşağıya gir ve Bağlan
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="field"><label>GitHub Kullanıcı Adı</label><input class="inp" value=${owner} onInput=${e=>setOwner(e.target.value)} placeholder="kullanici-adi"/></div>
+        <div class="field"><label>Repository Adı</label><input class="inp" value=${repo} onInput=${e=>setRepo(e.target.value)} placeholder="ustayapi-data"/></div>
+        <div class="field"><label>Personal Access Token</label><input class="inp" type="password" value=${token} onInput=${e=>setToken(e.target.value)} placeholder="ghp_xxxxxxxxxxxx"/></div>
+        ${status&&html`<p style="font-size:13px;color:${status.includes('✅')?'#10d98a':status.includes('❌')?'#f05252':'#f59e0b'}">${status}</p>`}
+        <div class="flex gap8">
+          <button class="btn btn-primary btn-md btn-full" onClick=${test}>🔗 Bağlan ve Kaydet</button>
+          ${ghCfg&&html`<button class="btn btn-danger btn-md" onClick=${()=>{onClearGh();setStatus('Bağlantı kaldırıldı')}}>Bağlantıyı Kes</button>`}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:14px">👤 Personel</h3>
+      ${STAFF.map(s=>html`
+        <div class="row" style="padding:10px 0;border-bottom:1px solid #1b2438">
+          <div class="flex gap10">
+            <div style="width:34px;height:34px;border-radius:50%;background:rgba(245,158,11,.09);display:flex;align-items:center;justify-content:center;color:#f59e0b;font-weight:800">${s.name.charAt(0)}</div>
+            <div><div style="font-weight:600;font-size:13px">${s.name}</div><div style="color:#4a5568;font-size:11px">${s.username} / ${s.password}</div></div>
+          </div>
+          <span class="badge" style="background:${s.role==='admin'?'rgba(245,158,11,.09)':'rgba(79,156,249,.08)'};color:${s.role==='admin'?'#f59e0b':'#4f9cf9'}">${s.role==='admin'?'👑 Admin':'💼 Kasiyer'}</span>
+        </div>`)}
+    </div>
+  </div>`;
+}
+
+// ── MAIN APP ──────────────────────────────────────────────────
+function App(){
+  const [ghCfg,setGhCfg]=useState(()=>ls('uy-gh',null));
+  const [ghStatus,setGhStatus]=useState('idle');
+  const [setupDone,setSetupDone]=useState(()=>ls('uy-setup',false));
+  const [user,setUser]=useState(null);
+  const [page,setPage]=useState('dashboard');
+  const [selCustId,setSelCustId]=useState(null);
+  const [modal,setModal]=useState(null);
+  const [editProd,setEditProd]=useState(null);
+  const [fisTx,setFisTx]=useState(null);
+  const [confirmCfg,setConfirmCfg]=useState(null);
+  const [hatCust,setHatCust]=useState(null);
+  const [showNotif,setShowNotif]=useState(false);
+  const [stokSearch,setStokSearch]=useState('');
+  const [stokCat,setStokCat]=useState('all');
+  const [custSearch,setCustSearch]=useState('');
+  const [menuOpen,setMenuOpen]=useState(false);
+  const [ww,setWw]=useState(window.innerWidth);
+
+  const [products,setProducts]=useState([]);
+  const [customers,setCustomers]=useState([]);
+  const [suppliers,setSuppliers]=useState([]);
+  const [custTx,setCustTx]=useState([]);
+  const [loaded,setLoaded]=useState(false);
+
+  useEffect(()=>{
+    const h=()=>setWw(window.innerWidth);
+    window.addEventListener('resize',h);
+    return()=>window.removeEventListener('resize',h);
+  },[]);
+  const mob=ww<768;
+
+  // Load data on mount
+  useEffect(()=>{(async()=>{
+    let data=null;
+    if(ghCfg){try{data=await ghLoad(ghCfg)}catch(e){console.warn('GitHub yüklenemedi')}}
+    if(!data){const c=ls('uy-cache',null);if(c)data=c}
+    if(!data){try{const r=await fetch('data.json');if(r.ok)data=await r.json()}catch{}}
+    if(data){
+      setProducts(data.products||[]);setCustomers(data.customers||[]);
+      setSuppliers(data.suppliers||[]);setCustTx(data.transactions||[]);
+      lsw('uy-cache',data);
+    }
+    setLoaded(true);
+    const b=document.getElementById('boot');if(b){b.style.opacity='0';setTimeout(()=>b.style.display='none',400)}
+  })()},[]);
+
+  const persist=useCallback(async(np,nc,nt,ns)=>{
+    const data={version:1,products:np??products,customers:nc??customers,suppliers:ns??suppliers,transactions:nt??custTx,lastUpdated:new Date().toISOString()};
+    lsw('uy-cache',data);
+    if(ghCfg){
+      setGhStatus('saving');
+      try{await ghSave(ghCfg,data);setGhStatus('saved');setTimeout(()=>setGhStatus('idle'),3000)}
+      catch(e){console.error(e);setGhStatus('error');setTimeout(()=>setGhStatus('idle'),5000)}
+    }
+  },[products,customers,custTx,suppliers,ghCfg]);
+
+  // Computed
+  const custBal=useMemo(()=>{
+    const b=Object.fromEntries(customers.map(c=>[c.id,0]));
+    custTx.forEach(tx=>{b[tx.customerId]=(b[tx.customerId]||0)+(tx.type==='sale'?tx.amount:-tx.amount)});
+    return b;
+  },[customers,custTx]);
+  const todaySales=useMemo(()=>custTx.filter(t=>t.type==='sale'&&isToday(t.date)).reduce((s,t)=>s+t.amount,0),[custTx]);
+  const monthSales=useMemo(()=>custTx.filter(t=>t.type==='sale'&&isMonth(t.date)).reduce((s,t)=>s+t.amount,0),[custTx]);
+  const monthProfit=useMemo(()=>custTx.filter(t=>t.type==='sale'&&isMonth(t.date)).reduce((s,t)=>s+(t.items?.reduce((ps,it)=>(it.sellPrice-it.buyPrice)*it.qty+ps,0)||0)-(t.discount||0),0),[custTx]);
+  const totalRec=useMemo(()=>Object.values(custBal).reduce((s,b)=>s+Math.max(b,0),0),[custBal]);
+  const stockVal=useMemo(()=>products.reduce((s,p)=>s+p.stock*p.buyPrice,0),[products]);
+  const lowStock=products.filter(p=>p.stock<=p.minStock);
+  const selCust=customers.find(c=>c.id===selCustId);
+  const selCustBal=selCustId?(custBal[selCustId]||0):0;
+  const isAdmin=user?.role==='admin';
+
+  // Actions
+  const saveProd=data=>{const np=editProd?products.map(x=>x.id===editProd.id?{...x,...data}:x):[...products,{id:uid(),...data}];setProducts(np);setEditProd(null);setModal(null);persist(np)};
+  const delProd=id=>setConfirmCfg({title:'Ürünü Sil',msg:'Bu ürünü silmek istediğinizden emin misiniz?',onOk:()=>{const np=products.filter(x=>x.id!==id);setProducts(np);setConfirmCfg(null);persist(np)}});
+  const saveCust=data=>{const nc=[...customers,{id:uid(),...data}];setCustomers(nc);setModal(null);persist(null,nc)};
+  const delCust=id=>setConfirmCfg({title:'Müşteriyi Sil',msg:'Bu müşteri ve tüm işlem geçmişi silinecek. Emin misiniz?',onOk:()=>{const nc=customers.filter(x=>x.id!==id);const nt=custTx.filter(x=>x.customerId!==id);setCustomers(nc);setCustTx(nt);setPage('musteriler');setConfirmCfg(null);persist(null,nc,nt)}});
+  const makeSale=(items,total,discount,note)=>{
+    const tx={id:uid(),customerId:selCustId,type:'sale',date:new Date().toISOString(),items,amount:total,discount,note};
+    const np=products.map(p=>{const it=items.find(i=>i.productId===p.id);return it?{...p,stock:p.stock-it.qty}:p});
+    const nt=[...custTx,tx];setProducts(np);setCustTx(nt);setFisTx(tx);setModal('fis');persist(np,null,nt);
+  };
+  const makePay=(amt,note)=>{const tx={id:uid(),customerId:selCustId,type:'payment',date:new Date().toISOString(),items:[],amount:amt,discount:0,note};const nt=[...custTx,tx];setCustTx(nt);setFisTx(tx);setModal('fis');persist(null,null,nt)};
+  const saveCounts=counts=>{const np=products.map(p=>({...p,stock:Number(counts[p.id]??p.stock)}));setProducts(np);persist(np)};
+  const goCustomer=id=>{setSelCustId(id);setPage('musteri-detay');setMenuOpen(false)};
+
+  const filtProds=products.filter(p=>(stokCat==='all'||p.cat===stokCat)&&(p.name.toLowerCase().includes(stokSearch.toLowerCase())||p.code?.toLowerCase().includes(stokSearch.toLowerCase())));
+  const activePage=page==='musteri-detay'?'musteriler':page;
+
+  const navItems=[
+    {id:'dashboard',icon:'📊',label:'Genel Bakış'},
+    {id:'stok',icon:'📦',label:'Stok'},
+    {id:'sayim',icon:'🔢',label:'Stok Sayımı'},
+    {id:'musteriler',icon:'👥',label:'Müşteriler'},
+    ...(isAdmin?[{id:'kasa',icon:'💹',label:'Kasa & Rapor'},{id:'ayarlar',icon:'⚙️',label:'Ayarlar'}]:[]),
+  ];
+
+  if(!setupDone)return html`<${GHSetup} onSave=${cfg=>{setGhCfg(cfg);lsw('uy-gh',cfg);lsw('uy-setup',true);setSetupDone(true)}} onSkip=${()=>{lsw('uy-setup',true);setSetupDone(true)}}/>`;
+  if(!user)return html`<${Login} onLogin=${setUser}/>`;
+  if(!loaded)return null;
+
+  const SidebarContent=html`
+    <div style="padding:14px 14px 12px;border-bottom:1px solid #1b2438;display:flex;align-items:center;gap:10px">
+      ${LOGO}
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#f59e0b;letter-spacing:-.5px">UstaYapı</div>
+        <div style="font-size:10px;color:#4a5568;margin-top:1px">${user.name} ${ghCfg?html`· <span style="color:#10d98a">☁️ GitHub</span>`:''}</div>
+      </div>
+    </div>
+    <nav style="padding:8px 6px;flex:1">
+      ${navItems.map(n=>html`<button class=${activePage===n.id?'active':''} onClick=${()=>{setPage(n.id);setMenuOpen(false)}}>${n.icon} ${n.label}</button>`)}
+    </nav>
+    <div style="padding:10px 14px;border-top:1px solid #1b2438">
+      ${[{l:'Alacak',v:tl(totalRec),c:'#f05252'},{l:'Stok Değ.',v:tl(stockVal),c:'#7a8ba8'}].map(r=>html`
+        <div class="row" style="font-size:11px;margin-bottom:3px"><span style="color:#4a5568">${r.l}</span><span style="color:${r.c};font-weight:700;font-family:monospace">${r.v}</span></div>`)}
+      ${lowStock.length>0&&html`<div style="background:rgba(240,82,82,.08);border-radius:8px;padding:4px 8px;font-size:11px;color:#f05252;text-align:center;margin-top:4px">⚠️ ${lowStock.length} kritik stok!</div>`}
+      <button class="btn btn-ghost btn-sm btn-full" style="margin-top:8px" onClick=${()=>setUser(null)}>🚪 Çıkış</button>
+    </div>`;
+
+  return html`<div style="min-height:100vh;display:flex">
+    ${!mob&&html`<div style="width:220px;background:#060810;border-right:1px solid #1b2438;position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:100">${SidebarContent}</div>`}
+    ${mob&&html`<div style="position:fixed;top:0;left:0;right:0;background:#060810;border-bottom:1px solid #1b2438;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;z-index:200">
+      <div class="flex gap8">${LOGO}<div style="font-size:15px;font-weight:800;color:#f59e0b">UstaYapı</div></div>
+      <div class="flex gap8">
+        <button class="btn btn-${lowStock.length>0?'danger':'ghost'} btn-sm" onClick=${()=>setShowNotif(!showNotif)}>🔔${lowStock.length>0?' '+lowStock.length:''}</button>
+        <button class="btn btn-ghost btn-sm" onClick=${()=>setMenuOpen(!menuOpen)}>☰</button>
+      </div>
+    </div>`}
+    ${mob&&menuOpen&&html`<div style="position:fixed;inset:0;z-index:150" onClick=${()=>setMenuOpen(false)}>
+      <div style="position:absolute;top:0;left:0;bottom:0;width:240px;background:#060810;border-right:1px solid #1b2438;display:flex;flex-direction:column" onClick=${e=>e.stopPropagation()}>${SidebarContent}</div>
+    </div>`}
+
+    <div style="margin-left:${mob?0:220}px;flex:1;padding:${mob?'68px 14px 24px':'24px 22px'};box-sizing:border-box;min-width:0">
+      ${!mob&&html`<div class="row" style="margin-bottom:16px">
+        <span></span>
+        <div class="flex gap8">
+          <span class="badge" style="background:${isAdmin?'rgba(245,158,11,.09)':'rgba(79,156,249,.08)'};color:${isAdmin?'#f59e0b':'#4f9cf9'}">${isAdmin?'👑 Admin':'💼 Kasiyer'}: ${user.name}</span>
+          ${ghCfg&&html`<span class="badge" style="background:rgba(16,217,138,.08);color:#10d98a">☁️ GitHub Aktif</span>`}
+          <button class="btn btn-${lowStock.length>0?'danger':'ghost'} btn-sm" onClick=${()=>setShowNotif(!showNotif)}>🔔 ${lowStock.length>0?lowStock.length+' uyarı':'Bildirimler'}</button>
+        </div>
+      </div>`}
+
+      <!-- DASHBOARD -->
+      ${page==='dashboard'&&html`<div>
+        <h2 style="font-size:20px;font-weight:800;margin-bottom:16px">📊 Genel Bakış</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px">
+          ${[['🛒','Bugün Satış',tl(todaySales),'#f59e0b'],['📈','Bu Ay Satış',tl(monthSales),'#4f9cf9'],['💹','Bu Ay Kâr',tl(monthProfit),'#10d98a'],['💰','Toplam Alacak',tl(totalRec),'#f05252']].map(([i,l,v,c])=>html`
+            <div class="card flex gap10">
+              <div style="width:42px;height:42px;border-radius:12px;background:${c}18;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${i}</div>
+              <div><div style="font-size:10px;color:#4a5568;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">${l}</div>
+              <div style="font-size:15px;font-weight:800;color:${c};font-family:monospace">${v}</div></div>
+            </div>`)}
+        </div>
+        <div style="display:grid;grid-template-columns:${mob?'1fr':'1fr 1fr'};gap:14px">
+          <div class="card">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:12px">🕐 Son İşlemler</h3>
+            ${[...custTx].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,7).map(tx=>{const c=customers.find(x=>x.id===tx.customerId);return html`
+              <div class="row" style="padding:8px 0;border-bottom:1px solid #1b2438;cursor:pointer" onClick=${()=>goCustomer(tx.customerId)}>
+                <div><div style="font-size:13px;font-weight:600">${c?.name}</div><div style="font-size:11px;color:#4a5568">${dt(tx.date)}</div></div>
+                <div style="text-align:right">
+                  <div style="font-size:14px;font-weight:800;color:${tx.type==='sale'?'#f05252':'#10d98a'};font-family:monospace">${tx.type==='sale'?'+':'−'}${tl(tx.amount)}</div>
+                  <span class="badge" style="background:${tx.type==='sale'?'rgba(240,82,82,.08)':'rgba(16,217,138,.08)'};color:${tx.type==='sale'?'#f05252':'#10d98a'}">${tx.type==='sale'?'Satış':'Ödeme'}</span>
+                </div>
+              </div>`})}
+            ${custTx.length===0&&html`<p style="color:#4a5568;font-size:13px">Henüz işlem yok.</p>`}
+          </div>
+          <div class="card">
+            <h3 style="font-size:13px;font-weight:700;margin-bottom:12px">⚠️ Kritik Stok</h3>
+            ${lowStock.length===0?html`<p style="color:#10d98a;font-size:13px">✅ Tüm stoklar yeterli.</p>`:lowStock.slice(0,7).map(p=>html`
+              <div class="row" style="padding:7px 0;border-bottom:1px solid #1b2438">
+                <div style="font-size:13px;font-weight:500">${p.name}</div>
+                <span class="badge" style="background:${p.stock===0?'rgba(240,82,82,.08)':'rgba(245,158,11,.09)'};color:${p.stock===0?'#f05252':'#f59e0b'}">${p.stock} ${p.unit}</span>
+              </div>`)}
+          </div>
+        </div>
+      </div>`}
+
+      <!-- STOK -->
+      ${page==='stok'&&html`<div>
+        <div class="row" style="margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <h2 style="font-size:20px;font-weight:800;margin:0">📦 Stok</h2>
+          <div class="flex gap8">
+            <button class="btn btn-purple btn-md" onClick=${()=>setModal('etiket')}>🏷️ Etiket</button>
+            <button class="btn btn-primary btn-md" onClick=${()=>{setEditProd(null);setModal('urun')}}>+ Yeni Ürün</button>
+          </div>
+        </div>
+        <input class="inp" value=${stokSearch} onInput=${e=>setStokSearch(e.target.value)} placeholder="🔍 Ürün adı veya kod..." style="margin-bottom:12px"/>
+        <div class="flex gap6" style="margin-bottom:14px;flex-wrap:wrap">
+          ${[{id:'all',name:'Tümü',icon:'📦',count:products.length},...CATS.map(c=>({...c,count:products.filter(p=>p.cat===c.id).length}))].filter(c=>c.count>0||c.id==='all').map(cat=>html`
+            <button class="tag ${stokCat===cat.id?'active':''}" onClick=${()=>setStokCat(cat.id)}>${cat.icon} ${cat.name} (${cat.count})</button>`)}
+        </div>
+        <div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto">
+          <table>
+            <thead><tr>${['Resim','Kod','Ürün','Stok','Satış ₺','Marj',''].map(h=>html`<th>${h}</th>`)}</tr></thead>
+            <tbody>${filtProds.map(p=>{const m=Number(mar(p.sellPrice,p.buyPrice));const isLow=p.stock<=p.minStock;return html`
+              <tr style="background:${isLow?'rgba(240,82,82,.03)':'transparent'}">
+                <td>
+                  ${p.image?html`<img src=${p.image} alt="" style="width:34px;height:34px;object-fit:cover;border-radius:8px;border:1px solid #1b2438" onError=${e=>e.target.style.display='none'}/>`
+                  :html`<div style="width:34px;height:34px;border-radius:8px;background:rgba(245,158,11,.09);display:flex;align-items:center;justify-content:center;font-size:16px">${catOf(p.cat).icon}</div>`}
+                </td>
+                <td style="color:#4a5568;font-size:11px;font-family:monospace">${p.code||'—'}</td>
+                <td style="font-weight:600">${isLow?'⚠️ ':''} ${p.name}</td>
+                <td><span class="badge" style="background:${p.stock===0?'rgba(240,82,82,.08)':isLow?'rgba(245,158,11,.09)':'rgba(16,217,138,.08)'};color:${p.stock===0?'#f05252':isLow?'#f59e0b':'#10d98a'}">${p.stock} ${p.unit}</span></td>
+                <td style="color:#f59e0b;font-weight:700;font-family:monospace">${tl(p.sellPrice)}</td>
+                <td><span class="badge" style="background:${m>=30?'rgba(16,217,138,.08)':m>=15?'rgba(245,158,11,.09)':'rgba(240,82,82,.08)'};color:${m>=30?'#10d98a':m>=15?'#f59e0b':'#f05252'}">%${m}</span></td>
+                <td>
+                  <div class="flex gap6">
+                    <button class="btn btn-blue btn-sm" onClick=${()=>{setEditProd(p);setModal('urun')}}>✏️</button>
+                    ${isAdmin&&html`<button class="btn btn-danger btn-sm" onClick=${()=>delProd(p.id)}>🗑️</button>`}
+                  </div>
+                </td>
+              </tr>`})}
+            </tbody>
+          </table>
+          ${filtProds.length===0&&html`<p style="color:#4a5568;text-align:center;padding:32px">Ürün bulunamadı.</p>`}
+        </div></div>
+      </div>`}
+
+      <!-- SAYIM -->
+      ${page==='sayim'&&html`<${SayimPage} products=${products} onSave=${saveCounts}/>`}
+
+      <!-- MÜŞTERİLER -->
+      ${page==='musteriler'&&html`<div>
+        <div class="row" style="margin-bottom:18px;flex-wrap:wrap;gap:10px">
+          <h2 style="font-size:20px;font-weight:800;margin:0">👥 Müşteriler</h2>
+          <button class="btn btn-primary btn-md" onClick=${()=>setModal('musteri')}>+ Yeni Müşteri</button>
+        </div>
+        <input class="inp" value=${custSearch} onInput=${e=>setCustSearch(e.target.value)} placeholder="🔍 Ad, telefon veya not ile ara..." style="margin-bottom:14px"/>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${customers.filter(c=>c.name.toLowerCase().includes(custSearch.toLowerCase())||c.phone?.includes(custSearch)||c.note?.toLowerCase().includes(custSearch.toLowerCase())).map(c=>{
+            const bal=custBal[c.id]||0;
+            return html`<div class="card">
+              <div class="row">
+                <div class="flex gap10" style="flex:1;min-width:0;cursor:pointer" onClick=${()=>goCustomer(c.id)}>
+                  <div style="width:44px;height:44px;border-radius:50%;background:rgba(245,158,11,.09);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#f59e0b;flex-shrink:0">${c.name.charAt(0)}</div>
+                  <div style="min-width:0">
+                    <div style="font-weight:700;font-size:14px">${c.name}</div>
+                    <div style="color:#4a5568;font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.phone||'Tel yok'}${c.address?' · '+c.address:''}</div>
+                    ${c.note&&html`<div style="color:#f59e0b;font-size:11px;margin-top:1px">📝 ${c.note}</div>`}
+                  </div>
+                </div>
+                <div class="flex gap10" style="flex-shrink:0">
+                  <div style="text-align:right;cursor:pointer" onClick=${()=>goCustomer(c.id)}>
+                    <div style="font-size:17px;font-weight:800;color:${bal>0?'#f05252':bal<0?'#10d98a':'#4a5568'};font-family:monospace">${tl(Math.abs(bal))}</div>
+                    <span class="badge" style="background:${bal>0?'rgba(240,82,82,.08)':bal<0?'rgba(16,217,138,.08)':'rgba(74,85,104,.15)'};color:${bal>0?'#f05252':bal<0?'#10d98a':'#4a5568'}">${bal>0?'BORÇ':bal<0?'ALACAK':'Temiz'}</span>
+                  </div>
+                  ${isAdmin&&html`<button onClick=${e=>{e.stopPropagation();delCust(c.id)}} style="background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.25);border-radius:10px;padding:8px 10px;cursor:pointer;color:#f05252;font-size:15px;flex-shrink:0">🗑️</button>`}
+                </div>
+              </div>
+            </div>`})}
+          ${customers.length===0&&html`<div class="card"><p style="color:#4a5568;text-align:center">Henüz müşteri yok. + Yeni Müşteri ekleyin.</p></div>`}
+        </div>
+      </div>`}
+
+      <!-- MÜŞTERİ DETAY -->
+      ${page==='musteri-detay'&&selCust&&html`<${MusteriDetay}
+        cust=${selCust} txList=${custTx.filter(t=>t.customerId===selCustId)} balance=${selCustBal} custBal=${custBal}
+        onBack=${()=>setPage('musteriler')} onSatis=${()=>setModal('satis')} onOdeme=${()=>setModal('cust-odeme')}
+        onFis=${tx=>{setFisTx(tx);setModal('fis')}} onHatirlatma=${()=>setHatCust(selCust)}
+        onDelete=${isAdmin?()=>delCust(selCustId):undefined}/>`}
+
+      <!-- KASA -->
+      ${page==='kasa'&&isAdmin&&html`<div>
+        <div class="row" style="margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <h2 style="font-size:20px;font-weight:800;margin:0">💹 Kasa & Raporlar</h2>
+          <button class="btn btn-blue btn-md" onClick=${()=>setModal('gunluk')}>🖨️ Günlük Rapor</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px">
+          ${[['📅','Bugün',tl(todaySales),'#f59e0b'],['📈','Bu Ay',tl(monthSales),'#4f9cf9'],['💹','Bu Ay Kâr',tl(monthProfit),'#10d98a'],['🏪','Stok Maliyeti',tl(stockVal),'#a78bfa']].map(([i,l,v,c])=>html`
+            <div class="card flex gap10">
+              <div style="width:42px;height:42px;border-radius:12px;background:${c}18;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${i}</div>
+              <div><div style="font-size:10px;color:#4a5568;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">${l}</div>
+              <div style="font-size:15px;font-weight:800;color:${c};font-family:monospace">${v}</div></div>
+            </div>`)}
+        </div>
+        <div class="card">
+          <h3 style="font-size:13px;font-weight:700;margin-bottom:14px">💰 En Yüksek Bakiye</h3>
+          ${[...customers].sort((a,b)=>(custBal[b.id]||0)-(custBal[a.id]||0)).filter(c=>(custBal[c.id]||0)>0).slice(0,8).map((c,i,arr)=>html`
+            <div class="row" style="padding:9px 0;border-bottom:${i<arr.length-1?'1px solid #1b2438':'none'};cursor:pointer" onClick=${()=>goCustomer(c.id)}>
+              <span style="font-size:13px">${c.name}</span>
+              <span style="color:#f05252;font-weight:800;font-family:monospace">${tl(custBal[c.id])}</span>
+            </div>`)}
+          ${!Object.values(custBal).some(b=>b>0)&&html`<p style="color:#10d98a;font-size:13px">✅ Alacak bulunmuyor.</p>`}
+        </div>
+      </div>`}
+
+      <!-- AYARLAR -->
+      ${page==='ayarlar'&&isAdmin&&html`<${AyarlarPage} ghCfg=${ghCfg} onUpdateGh=${cfg=>{setGhCfg(cfg);lsw('uy-gh',cfg)}} onClearGh=${()=>{setGhCfg(null);lsw('uy-gh',null)}}/>`}
+    </div>
+
+    <!-- NOTIFICATION PANEL -->
+    ${showNotif&&html`<div class="notif-panel">
+      <div class="row" style="padding:16px 16px 12px;border-bottom:1px solid #1b2438;position:sticky;top:0;background:#0e1420">
+        <span style="font-weight:800;font-size:15px">🔔 Bildirimler</span>
+        <button class="btn btn-ghost btn-sm" style="font-size:20px;padding:4px 8px" onClick=${()=>setShowNotif(false)}>×</button>
+      </div>
+      <div style="padding:14px">
+        <p style="color:#4a5568;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">⚠️ Kritik Stok (${lowStock.length})</p>
+        ${lowStock.length===0?html`<p style="color:#10d98a;font-size:13px">✅ Tüm stoklar yeterli</p>`:lowStock.map(p=>html`
+          <div style="background:rgba(240,82,82,.08);border:1px solid rgba(240,82,82,.25);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer" onClick=${()=>{setPage('stok');setShowNotif(false)}}>
+            <div style="font-size:13px;font-weight:600">${p.name}</div>
+            <div style="font-size:11px;color:#f05252;margin-top:2px">${p.stock} ${p.unit} kaldı (Min: ${p.minStock})</div>
+          </div>`)}
+        <div style="border-top:1px solid #1b2438;margin:12px 0"></div>
+        <p style="color:#4a5568;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">🛒 Bugünkü Satışlar</p>
+        ${custTx.filter(t=>isToday(t.date)&&t.type==='sale').slice(0,5).map(tx=>{const c=customers.find(x=>x.id===tx.customerId);return html`
+          <div style="background:rgba(16,217,138,.08);border:1px solid rgba(16,217,138,.25);border-radius:10px;padding:10px 12px;margin-bottom:6px">
+            <div style="font-size:13px;font-weight:600">${c?.name}</div>
+            <div style="font-size:11px;color:#10d98a;margin-top:2px">${tl(tx.amount)} · ${new Date(tx.date).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'})}</div>
+          </div>`})}
+        ${custTx.filter(t=>isToday(t.date)&&t.type==='sale').length===0&&html`<p style="color:#4a5568;font-size:13px">Bugün satış yok</p>`}
+      </div>
+    </div>`}
+
+    <!-- SAVE STATUS -->
+    ${ghStatus!=='idle'&&html`<div class="save-status" style="background:${ghStatus==='saved'?'rgba(16,217,138,.08)':ghStatus==='error'?'rgba(240,82,82,.08)':'rgba(245,158,11,.09)'};border:1px solid ${ghStatus==='saved'?'rgba(16,217,138,.25)':ghStatus==='error'?'rgba(240,82,82,.25)':'rgba(245,158,11,.28)'};color:${ghStatus==='saved'?'#10d98a':ghStatus==='error'?'#f05252':'#f59e0b'}">
+      ${ghStatus==='saving'?'💾 GitHub\'a kaydediliyor...':ghStatus==='saved'?'✓ Kaydedildi!':'⚠️ Kayıt hatası'}
+    </div>`}
+
+    <!-- MODALS -->
+    ${modal==='urun'&&html`<${UrunModal} product=${editProd} suppliers=${suppliers} onSave=${saveProd} onClose=${()=>{setModal(null);setEditProd(null)}}/>`}
+    ${modal==='musteri'&&html`<${MusteriModal} onSave=${saveCust} onClose=${()=>setModal(null)}/>`}
+    ${modal==='satis'&&selCust&&html`<${SatisModal} products=${products} customer=${selCust} onSave=${makeSale} onClose=${()=>setModal(null)}/>`}
+    ${modal==='cust-odeme'&&selCust&&html`<${OdemeModal} title=${`💰 Ödeme Al — ${selCust.name}`} balance=${selCustBal} balLabel="Müşteri Borcu" balColor="#f05252" onSave=${makePay} onClose=${()=>setModal(null)}/>`}
+    ${modal==='fis'&&fisTx&&selCust&&html`<${FisModal} tx=${fisTx} customer=${selCust} balance=${custBal[selCust.id]||0} onClose=${()=>setModal(null)}/>`}
+    ${modal==='gunluk'&&html`<${GunlukModal} custTx=${custTx} customers=${customers} onClose=${()=>setModal(null)}/>`}
+    ${modal==='etiket'&&html`<${EtiketModal} products=${products} onClose=${()=>setModal(null)}/>`}
+    ${hatCust&&html`<${BorcModal} cust=${hatCust} balance=${custBal[hatCust.id]||0} onClose=${()=>setHatCust(null)}/>`}
+    ${confirmCfg&&html`<${Confirm} title=${confirmCfg.title} msg=${confirmCfg.msg} onOk=${confirmCfg.onOk} onCancel=${()=>setConfirmCfg(null)}/>`}
+  </div>`;
+}
+
+render(html`<${App}/>`,document.getElementById('app'));
+</script>
+<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>
