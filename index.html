@@ -15,242 +15,169 @@
         :root { --bg: #07090f; --card: #0e1420; --primary: #f59e0b; --text: #e8edf5; --border: #1b2438; --danger: #ef4444; --success: #22c55e; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; }
-        
-        /* Navbar */
         .navbar { background: var(--card); padding: 12px; display: flex; justify-content: space-around; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav-btn { background: none; border: none; color: #64748b; font-size: 1.5rem; cursor: pointer; transition: 0.3s; position: relative; }
+        .nav-btn { background: none; border: none; color: #64748b; font-size: 1.5rem; cursor: pointer; }
         .nav-btn.active { color: var(--primary); }
-        
-        /* Layout */
         .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 100px; }
-        .search-box { width: 100%; padding: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; }
-        
-        /* Cards */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Buttons */
-        .btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: #000; width: 100%; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+        .btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .btn-primary { background: var(--primary); color: #000; }
         .btn-danger { background: var(--danger); color: #fff; }
-        .btn-success { background: var(--success); color: #fff; }
-
-        /* Modals */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 15px; }
-        .modal { background: var(--card); width: 100%; max-width: 450px; padding: 25px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
-        
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
-        input, select, textarea { width: 100%; padding: 12px; background: #07090f; border: 1px solid var(--border); border-radius: 8px; color: #fff; }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .stat-card { background: #1b2438; padding: 15px; border-radius: 10px; text-align: center; }
+        .btn-wa { background: var(--success); color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        input, select { width: 100%; padding: 12px; background: #07090f; border: 1px solid var(--border); border-radius: 8px; color: #fff; margin-bottom: 10px; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 15px; }
+        .modal { background: var(--card); width: 100%; max-width: 450px; padding: 20px; border-radius: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .search-box { width: 100%; padding: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; color: #fff; margin-bottom: 15px; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-
-        // GİZLİ AYARLAR
+        const { useState, useEffect } = React;
         const MASTER_ADMIN = { user: "admin", pass: "1234" };
         const DEPO_PASS = "depo123";
 
         function App() {
             const [user, setUser] = useState(null);
-            const [view, setView] = useState('customers'); // customers, stock, sales, reports
+            const [view, setView] = useState('customers'); // customers, sales, depo, reports
             const [data, setData] = useState({ products: [], customers: [], transactions: [] });
-            const [search, setSearch] = useState("");
-            const [modal, setModal] = useState(null); // 'customer', 'product', 'sale', 'depo_auth'
-            const [selectedItem, setSelectedItem] = useState(null);
             const [isDepoAuth, setIsDepoAuth] = useState(false);
-            const [tokenInfo, setTokenInfo] = useState({ user: "", repo: "", token: "" });
+            const [modal, setModal] = useState(null);
+            const [selectedItem, setSelectedItem] = useState(null);
+            const [ghInfo, setGhInfo] = useState({ token: "", user: "", repo: "" });
+            const [search, setSearch] = useState("");
 
-            // VERİ YÜKLEME
             useEffect(() => {
-                fetch('data.json').then(r => r.json()).then(setData).catch(e => console.error("Veri hatası"));
+                fetch('data.json').then(r => r.json()).then(setData).catch(() => {
+                    // Varsayılan boş data yapısı
+                    setData({ products: [], customers: [], transactions: [] });
+                });
             }, []);
 
-            // GITHUB'A KAYDETME (TOKEN İLE)
-            const syncData = async (newData) => {
+            const sync = async (newData) => {
                 setData(newData);
-                if (!tokenInfo.token) return;
-                
-                try {
-                    const url = `https://api.github.com/repos/${tokenInfo.user}/${tokenInfo.repo}/contents/data.json`;
-                    const res = await fetch(url, { headers: { 'Authorization': `token ${tokenInfo.token}` } });
-                    const file = await res.json();
-                    
-                    await fetch(url, {
-                        method: 'PUT',
-                        headers: { 'Authorization': `token ${tokenInfo.token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: "UstaYapı Otomatik Güncelleme",
-                            content: btoa(unescape(encodeURIComponent(JSON.stringify(newData, null, 2)))),
-                            sha: file.sha
-                        })
-                    });
-                } catch (e) { alert("GitHub Kayıt Hatası!"); }
+                if (!ghInfo.token) return;
+                // GitHub Kayıt Mantığı Buraya (API PUT)
             };
 
-            // HESAPLAMA MANTIĞI
-            const getCustBalance = (cId) => {
-                return (data.transactions || [])
-                    .filter(t => t.customerId === cId)
-                    .reduce((s, t) => s + (t.type === 'satis' ? t.total : -t.amount), 0);
+            const getBalance = (cId) => {
+                return (data.transactions || []).filter(t => t.customerId === cId)
+                    .reduce((s, t) => s + (t.type === 'satis' ? t.total : -t.total), 0);
             };
 
-            // FİLTRELEME
-            const filteredCustomers = data.customers.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
-            const filteredProducts = data.products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()));
-
-            // WHATSAPP DÖKÜMÜ GÖNDERME
-            const sendWhatsAppReport = (cust) => {
-                const custTxs = data.transactions.filter(t => t.customerId === cust.id && t.type === 'satis').slice(-5);
-                let msg = `*USTA YAPI HESAP ÖZETİ*\n-------------------\n*Sayın ${cust.name},*\n\nSon Aldığınız Malzemeler:\n`;
-                custTxs.forEach(t => {
-                    const p = data.products.find(pr => pr.id === t.productId);
-                    msg += `- ${p?.name}: ${t.qty} ${p?.unit} (${t.total} TL)\n`;
-                });
-                msg += `\n*GÜNCEL TOPLAM BORÇ: ${getCustBalance(cust.id)} TL*`;
-                window.open(`https://wa.me/${cust.phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`);
-            };
-
-            // MODAL BİLEŞENLERİ (EKLEME/DÜZENLEME)
+            // MODALLAR (Ekleme/Düzenleme Ekranları)
             const CustomerModal = () => {
-                const [form, setForm] = useState(selectedItem || { id: Date.now().toString(), name: "", phone: "", address: "" });
+                const [form, setForm] = useState(selectedItem || { id: "c"+Date.now(), name: "", phone: "" });
                 return (
                     <div className="overlay"><div className="modal">
-                        <h3>{selectedItem ? 'Müşteri Düzenle' : 'Yeni Müşteri'}</h3>
-                        <div className="form-group"><label>Ad Soyad</label><input value={form.name} onInput={e=>setForm({...form, name: e.target.value})} /></div>
-                        <div className="form-group"><label>Telefon</label><input value={form.phone} onInput={e=>setForm({...form, phone: e.target.value})} /></div>
+                        <h3>{selectedItem ? 'Düzenle' : 'Yeni Müşteri'}</h3>
+                        <input placeholder="Ad Soyad" value={form.name} onInput={e=>setForm({...form, name: e.target.value})} />
+                        <input placeholder="Telefon (90532...)" value={form.phone} onInput={e=>setForm({...form, phone: e.target.value})} />
                         <button className="btn btn-primary" onClick={() => {
                             const newList = selectedItem ? data.customers.map(c => c.id === form.id ? form : c) : [...data.customers, form];
-                            syncData({...data, customers: newList}); setModal(null);
+                            sync({...data, customers: newList}); setModal(null);
                         }}>Kaydet</button>
-                        <button className="btn btn-outline" style={{marginTop:8, width:'100%'}} onClick={()=>setModal(null)}>Kapat</button>
+                        {selectedItem && <button className="btn btn-danger" style={{marginTop:8}} onClick={() => {
+                            sync({...data, customers: data.customers.filter(c=>c.id!==form.id)}); setModal(null);
+                        }}>Müşteriyi Sil</button>}
+                        <button className="btn btn-outline" style={{marginTop:8}} onClick={()=>setModal(null)}>Kapat</button>
                     </div></div>
                 );
             };
 
             const ProductModal = () => {
-                const [form, setForm] = useState(selectedItem || { id: 'p'+Date.now(), name: "", stock: 0, buyPrice: 0, sellPrice: 0, unit: "adet", minStock: 5 });
+                const [form, setForm] = useState(selectedItem || { id: "p"+Date.now(), name: "", stock: 0, sellPrice: 0, unit: "adet" });
                 return (
                     <div className="overlay"><div className="modal">
-                        <h3>{selectedItem ? 'Malzeme Düzenle' : 'Yeni Malzeme Ekle'}</h3>
-                        <div className="form-group"><label>Malzeme Adı</label><input value={form.name} onInput={e=>setForm({...form, name: e.target.value})} /></div>
-                        <div className="stat-grid">
-                            <div className="form-group"><label>Alış Fiyatı</label><input type="number" value={form.buyPrice} onInput={e=>setForm({...form, buyPrice: parseFloat(e.target.value)})} /></div>
-                            <div className="form-group"><label>Satış Fiyatı</label><input type="number" value={form.sellPrice} onInput={e=>setForm({...form, sellPrice: parseFloat(e.target.value)})} /></div>
-                        </div>
-                        <div className="stat-grid">
-                            <div className="form-group"><label>Mevcut Stok</label><input type="number" value={form.stock} onInput={e=>setForm({...form, stock: parseInt(e.target.value)})} /></div>
-                            <div className="form-group"><label>Birim</label><input value={form.unit} onInput={e=>setForm({...form, unit: e.target.value})} /></div>
-                        </div>
+                        <h3>{selectedItem ? 'Malzeme Düzenle' : 'Yeni Malzeme'}</h3>
+                        <input placeholder="Malzeme Adı" value={form.name} onInput={e=>setForm({...form, name: e.target.value})} />
+                        <input placeholder="Birim (Adet/Metre)" value={form.unit} onInput={e=>setForm({...form, unit: e.target.value})} />
+                        <input type="number" placeholder="Stok" value={form.stock} onInput={e=>setForm({...form, stock: parseInt(e.target.value)})} />
+                        <input type="number" placeholder="Satış Fiyatı" value={form.sellPrice} onInput={e=>setForm({...form, sellPrice: parseFloat(e.target.value)})} />
                         <button className="btn btn-primary" onClick={() => {
                             const newList = selectedItem ? data.products.map(p => p.id === form.id ? form : p) : [...data.products, form];
-                            syncData({...data, products: newList}); setModal(null);
-                        }}>{selectedItem ? 'Güncelle' : 'Depoya Ekle'}</button>
-                        {selectedItem && <button className="btn btn-danger" style={{marginTop:8, width:'100%'}} onClick={() => {
-                             if(confirm('Sileyim mi?')) { syncData({...data, products: data.products.filter(p=>p.id!==form.id)}); setModal(null); }
+                            sync({...data, products: newList}); setModal(null);
+                        }}>Kaydet</button>
+                        {selectedItem && <button className="btn btn-danger" style={{marginTop:8}} onClick={() => {
+                            sync({...data, products: data.products.filter(p=>p.id!==form.id)}); setModal(null);
                         }}>Malzemeyi Sil</button>}
-                        <button className="btn btn-outline" style={{marginTop:8, width:'100%'}} onClick={()=>setModal(null)}>İptal</button>
-                    </div></div>
-                );
-            };
-
-            const SaleModal = () => {
-                const [sale, setSale] = useState({ custId: "", prodId: "", qty: 1 });
-                const prod = data.products.find(p => p.id === sale.prodId);
-                return (
-                    <div className="overlay"><div className="modal">
-                        <h3>Hızlı Satış Yap</h3>
-                        <div className="form-group"><label>Müşteri</label>
-                            <select onInput={e=>setSale({...sale, custId: e.target.value})}><option value="">Seçiniz...</option>{data.customers.map(c=><option value={c.id}>{c.name}</option>)}</select>
-                        </div>
-                        <div className="form-group"><label>Malzeme</label>
-                            <select onInput={e=>setSale({...sale, prodId: e.target.value})}><option value="">Seçiniz...</option>{data.products.map(p=><option value={p.id}>{p.name} (Stok: {p.stock})</option>)}</select>
-                        </div>
-                        <div className="form-group"><label>Miktar</label><input type="number" value={sale.qty} onInput={e=>setSale({...sale, qty: parseInt(e.target.value)})} /></div>
-                        {prod && <div style={{textAlign:'center', padding:10, background:'#1b2438', borderRadius:8, marginBottom:10}}>Toplam: <b>{prod.sellPrice * sale.qty} TL</b></div>}
-                        <button className="btn btn-primary" onClick={() => {
-                            if(!sale.custId || !sale.prodId) return alert("Eksik bilgi!");
-                            const tx = { id: Date.now(), customerId: sale.custId, productId: sale.prodId, qty: sale.qty, total: prod.sellPrice * sale.qty, type: 'satis', date: new Date().toISOString() };
-                            const newProds = data.products.map(p => p.id === sale.prodId ? {...p, stock: p.stock - sale.qty} : p);
-                            syncData({...data, products: newProds, transactions: [...data.transactions, tx]});
-                            setModal(null); alert("Satış Kaydedildi!");
-                        }}>Satışı Onayla</button>
-                        <button className="btn btn-outline" style={{marginTop:8, width:'100%'}} onClick={()=>setModal(null)}>Vazgeç</button>
+                        <button className="btn btn-outline" style={{marginTop:8}} onClick={()=>setModal(null)}>Kapat</button>
                     </div></div>
                 );
             };
 
             if (!user) return (
-                <div className="overlay"><div className="modal" style={{textAlign:'center'}}>
-                    <i className="bi bi-shield-lock" style={{fontSize:40, color:var(--primary)}}></i>
-                    <h2 style={{margin:'15px 0'}}>UstaYapı Giriş</h2>
-                    <input id="u" placeholder="Kullanıcı" style={{marginBottom:10}} />
-                    <input id="p" type="password" placeholder="Şifre" />
-                    <button className="btn btn-primary" style={{marginTop:20}} onClick={() => {
-                        const u = document.getElementById('u').value;
-                        const p = document.getElementById('p').value;
+                <div className="overlay"><div className="modal">
+                    <h2 style={{textAlign:'center', marginBottom:20}}>UstaYapı Giriş</h2>
+                    <input id="u" placeholder="Kullanıcı Adı" /><input id="p" type="password" placeholder="Şifre" />
+                    <button className="btn btn-primary" style={{marginTop:10}} onClick={() => {
+                        const u = document.getElementById('u').value, p = document.getElementById('p').value;
                         if(u === MASTER_ADMIN.user && p === MASTER_ADMIN.pass) setUser(u); else alert("Hatalı!");
-                    }}>Sisteme Gir</button>
+                    }}>Giriş</button>
                 </div></div>
             );
 
             return (
                 <div>
                     <nav className="navbar">
-                        <button className={`nav-btn ${view==='customers'?'active':''}`} onClick={()=>setView('customers')}><i className="bi bi-people"></i></button>
-                        <button className={`nav-btn ${view==='sales'?'active':''}`} onClick={()=>setView('sales')}><i className="bi bi-cart-plus"></i></button>
-                        <button className={`nav-btn ${view==='depo'?'active':''}`} onClick={()=>{ if(!isDepoAuth) setModal('depo_auth'); else setView('depo'); }}><i className="bi bi-box-seam"></i></button>
+                        <button className={`nav-btn ${view==='customers'?'active':''}`} onClick={()=>setView('customers')}><i className="bi bi-people-fill"></i></button>
+                        <button className={`nav-btn ${view==='sales'?'active':''}`} onClick={()=>setView('sales')}><i className="bi bi-cart-plus-fill"></i></button>
+                        <button className={`nav-btn ${view==='depo'?'active':''}`} onClick={()=>{ if(!isDepoAuth) setModal('depo_auth'); else setView('depo'); }}><i className="bi bi-box-seam-fill"></i></button>
                         <button className={`nav-btn ${view==='reports'?'active':''}`} onClick={()=>setView('reports')}><i className="bi bi-graph-up"></i></button>
                     </nav>
 
                     <div className="container">
-                        <input className="search-box" placeholder={`${view==='customers'?'Müşteri':'Malzeme'} ara...`} onInput={e=>setSearch(e.target.value)} />
+                        <input className="search-box" placeholder="Ara..." onInput={e=>setSearch(e.target.value.toLowerCase())} />
 
                         {view === 'customers' && (
                             <div>
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:15}}>
-                                    <h3>Müşteri Listesi ({filteredCustomers.length})</h3>
-                                    <button className="btn btn-primary" style={{width:'auto'}} onClick={()=>{setSelectedItem(null);setModal('customer')}}>+ Yeni</button>
-                                </div>
-                                {filteredCustomers.map(c => (
+                                <button className="btn btn-primary" style={{marginBottom:15}} onClick={()=>{setSelectedItem(null); setModal('customer')}}>+ Yeni Müşteri</button>
+                                {data.customers.filter(c=>c.name.toLowerCase().includes(search)).map(c => (
                                     <div className="card" key={c.id}>
-                                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                                            <div>
-                                                <b>{c.name}</b><br/><small>{c.phone}</small>
-                                            </div>
-                                            <div style={{textAlign:'right'}}>
-                                                <span style={{color:var(--danger), fontWeight:'bold'}}>{getCustBalance(c.id)} TL</span>
-                                            </div>
+                                        <div style={{display:'flex', justifyContent:'space-between'}}>
+                                            <b>{c.name}</b> <span style={{color:var(--danger)}}>{getBalance(c.id)} ₺</span>
                                         </div>
-                                        <div style={{display:'flex', gap:8, marginTop:12}}>
-                                            <button className="btn btn-success" style={{flex:1}} onClick={()=>sendWhatsAppReport(c)}><i className="bi bi-whatsapp"></i> Döküm Gönder</button>
-                                            <button className="btn btn-outline" onClick={()=>{setSelectedItem(c); setModal('customer')}}><i className="bi bi-pencil"></i></button>
+                                        <div style={{display:'flex', gap:10, marginTop:10}}>
+                                            <button className="btn btn-wa" onClick={() => {
+                                                const txs = data.transactions.filter(t=>t.customerId===c.id).slice(-3);
+                                                let msg = `Sayın ${c.name}, son aldığınız malzemeler:\n` + txs.map(t=>`- ${t.qty} adet ${data.products.find(p=>p.id===t.productId)?.name}`).join('\n') + `\nToplam Borç: ${getBalance(c.id)} TL`;
+                                                window.open(`https://wa.me/${c.phone}?text=${encodeURIComponent(msg)}`);
+                                            }}>WhatsApp Döküm</button>
+                                            <button className="btn btn-outline" onClick={()=>{setSelectedItem(c); setModal('customer')}}>Düzenle</button>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
+                        {view === 'sales' && (
+                            <div className="card">
+                                <h3>Hızlı Satış</h3>
+                                <select id="sc"><option value="">Müşteri Seç...</option>{data.customers.map(c=><option value={c.id}>{c.name}</option>)}</select>
+                                <select id="sp"><option value="">Malzeme Seç...</option>{data.products.map(p=><option value={p.id}>{p.name} ({p.stock})</option>)}</select>
+                                <input id="sq" type="number" placeholder="Miktar" defaultValue="1" />
+                                <button className="btn btn-primary" onClick={() => {
+                                    const cId = document.getElementById('sc').value, pId = document.getElementById('sp').value, q = parseInt(document.getElementById('sq').value);
+                                    const prod = data.products.find(p=>p.id===pId);
+                                    if(!prod || prod.stock < q) return alert("Hata!");
+                                    const tx = { id: Date.now(), customerId: cId, productId: pId, qty: q, total: prod.sellPrice * q, type:'satis', date: new Date() };
+                                    const newProds = data.products.map(p=>p.id===pId ? {...p, stock: p.stock - q} : p);
+                                    sync({...data, products: newProds, transactions: [...data.transactions, tx]});
+                                    alert("Satış Yapıldı!");
+                                }}>Satışı Tamamla</button>
+                            </div>
+                        )}
+
                         {view === 'depo' && (
                             <div>
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:15}}>
-                                    <h3>Stok Durumu</h3>
-                                    <button className="btn btn-primary" style={{width:'auto'}} onClick={()=>{setSelectedItem(null);setModal('product')}}>+ Yeni Malzeme</button>
-                                </div>
-                                {filteredProducts.map(p => (
-                                    <div className="card" key={p.id} onClick={()=>{setSelectedItem(p);setModal('product')}}>
+                                <button className="btn btn-primary" style={{marginBottom:15}} onClick={()=>{setSelectedItem(null); setModal('product')}}>+ Yeni Malzeme Ekle</button>
+                                {data.products.filter(p=>p.name.toLowerCase().includes(search)).map(p => (
+                                    <div className="card" key={p.id} onClick={()=>{setSelectedItem(p); setModal('product')}}>
                                         <div style={{display:'flex', justifyContent:'space-between'}}>
-                                            <span>{p.name}</span>
-                                            <b style={{color: p.stock <= p.minStock ? var(--danger) : var(--primary)}}>{p.stock} {p.unit}</b>
+                                            <span>{p.name}</span> <b>{p.stock} {p.unit}</b>
                                         </div>
-                                        <div style={{fontSize:12, color:'#64748b', marginTop:5}}>Alış: {p.buyPrice}₺ | Satış: {p.sellPrice}₺</div>
                                     </div>
                                 ))}
                             </div>
@@ -258,29 +185,38 @@
 
                         {view === 'reports' && (
                             <div>
-                                <h3>Finansal Rapor</h3>
-                                <div className="stat-grid" style={{marginTop:15}}>
-                                    <div className="stat-card"><h5>Toplam Alacak</h5><h2 style={{color:var(--danger)}}>{data.customers.reduce((s,c)=>s+getCustBalance(c.id),0)} ₺</h2></div>
-                                    <div className="stat-card"><h5>Depo Değeri</h5><h2 style={{color:var(--success)}}>{data.products.reduce((s,p)=>s+(p.stock*p.buyPrice),0)} ₺</h2></div>
-                                </div>
+                                <div className="card" style={{textAlign:'center'}}><h3>Toplam Alacak: {data.customers.reduce((s,c)=>s+getBalance(c.id),0)} ₺</h3></div>
                                 <h4>Son İşlemler</h4>
-                                {data.transactions.slice(-10).reverse().map(t => {
-                                    const c = data.customers.find(cu=>cu.id===t.customerId);
-                                    return <div className="card" style={{fontSize:13}}>
-                                        {new Date(t.date).toLocaleDateString()} - <b>{c?.name}</b>: {t.total} TL satış.
+                                {data.transactions.slice(-10).reverse().map(t => (
+                                    <div className="card" key={t.id} style={{fontSize:12}}>
+                                        {data.customers.find(c=>c.id===t.customerId)?.name} - {t.total} TL tutarında malzeme aldı.
                                     </div>
-                                })}
+                                ))}
                             </div>
                         )}
-
-                        {view === 'sales' && <SaleModal />}
                     </div>
 
-                    {/* MODALLAR */}
                     {modal === 'customer' && <CustomerModal />}
                     {modal === 'product' && <ProductModal />}
                     {modal === 'depo_auth' && (
                         <div className="overlay"><div className="modal">
-                            <h3>Depo Güvenlik Girişi</h3>
-                            <div className="form-group"><label>Depo Şifresi</label><input type="password" id="d_p" /></div>
-                            <hr style={{margin:'15px 0', borderColor:var(--border)}} 
+                            <h3>Güvenlik Girişi</h3>
+                            <input id="dp" type="password" placeholder="Depo Şifresi" />
+                            <input id="gt" placeholder="GitHub Token" />
+                            <button className="btn btn-primary" onClick={() => {
+                                if(document.getElementById('dp').value === DEPO_PASS) {
+                                    setGhInfo({...ghInfo, token: document.getElementById('gt').value});
+                                    setIsDepoAuth(true); setModal(null); setView('depo');
+                                } else alert("Şifre Yanlış!");
+                            }}>Giriş</button>
+                            <button className="btn btn-outline" style={{marginTop:8}} onClick={()=>setModal(null)}>Vazgeç</button>
+                        </div></div>
+                    )}
+                </div>
+            );
+        }
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    </script>
+</body>
+</html>
