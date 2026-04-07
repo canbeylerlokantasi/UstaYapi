@@ -1,35 +1,271 @@
 {
   "version": 1,
-  "lastUpdated": "2026-01-01T00:00:00.000Z",
   "products": [
-    {"id":"p1","code":"BRU001","name":"Galvaniz Boru 3/4\"","cat":"boru","stock":200,"minStock":30,"buyPrice":18,"sellPrice":28,"unit":"metre","supplierId":"s1","image":""},
-    {"id":"p2","code":"BRU002","name":"PVC Boru 1/2\"","cat":"boru","stock":150,"minStock":50,"buyPrice":8,"sellPrice":14,"unit":"metre","supplierId":"s1","image":""},
-    {"id":"p3","code":"BRU003","name":"Dirsek Galvaniz 3/4\"","cat":"boru","stock":80,"minStock":20,"buyPrice":5,"sellPrice":9,"unit":"adet","supplierId":"s1","image":""},
-    {"id":"p4","code":"ELK001","name":"2.5mm² NYA Kablo","cat":"elektrik","stock":500,"minStock":100,"buyPrice":3.5,"sellPrice":6,"unit":"metre","supplierId":"s2","image":""},
-    {"id":"p5","code":"ELK002","name":"Sigorta Otomatik 16A","cat":"elektrik","stock":45,"minStock":10,"buyPrice":28,"sellPrice":55,"unit":"adet","supplierId":"s2","image":""},
-    {"id":"p6","code":"ELK003","name":"Priz Topraklı","cat":"elektrik","stock":60,"minStock":20,"buyPrice":12,"sellPrice":22,"unit":"adet","supplierId":"s2","image":""},
-    {"id":"p7","code":"ALE001","name":"Çekiç 500g","cat":"alet","stock":20,"minStock":5,"buyPrice":45,"sellPrice":85,"unit":"adet","supplierId":"s1","image":""},
-    {"id":"p8","code":"ALE002","name":"Tornavida Seti 8li","cat":"alet","stock":15,"minStock":5,"buyPrice":55,"sellPrice":110,"unit":"takım","supplierId":"s1","image":""},
-    {"id":"p9","code":"HRD001","name":"M8x30 Vida Seti 50li","cat":"hirdavat","stock":12,"minStock":15,"buyPrice":8,"sellPrice":18,"unit":"kutu","supplierId":"s1","image":""},
-    {"id":"p10","code":"HRD002","name":"Dübel 10mm 100lü","cat":"hirdavat","stock":80,"minStock":20,"buyPrice":6,"sellPrice":12,"unit":"kutu","supplierId":"s1","image":""},
-    {"id":"p11","code":"YPI001","name":"Çimento Portland 50kg","cat":"yapi","stock":60,"minStock":20,"buyPrice":120,"sellPrice":180,"unit":"çuval","supplierId":"s3","image":""},
-    {"id":"p12","code":"YPI002","name":"Alçı 25kg","cat":"yapi","stock":30,"minStock":10,"buyPrice":55,"sellPrice":90,"unit":"çuval","supplierId":"s3","image":""},
-    {"id":"p13","code":"KMY001","name":"Silikon Şeffaf 310ml","cat":"kimya","stock":35,"minStock":10,"buyPrice":22,"sellPrice":40,"unit":"adet","supplierId":"s3","image":""},
-    {"id":"p14","code":"BOY001","name":"İç Cephe Boya 2.5L","cat":"boya","stock":25,"minStock":8,"buyPrice":95,"sellPrice":160,"unit":"adet","supplierId":"s3","image":""},
-    {"id":"p15","code":"BOY002","name":"Dış Cephe Boya 7.5L","cat":"boya","stock":8,"minStock":5,"buyPrice":280,"sellPrice":450,"unit":"adet","supplierId":"s3","image":""},
-    {"id":"p16","code":"TST001","name":"Su Sayacı 1/2","cat":"tesisat","stock":4,"minStock":3,"buyPrice":85,"sellPrice":160,"unit":"adet","supplierId":"s1","image":""}
+    {
+      "id": "p1",
+      "code": "BRU001",
+      "name": "Galvaniz Boru 3/4\"",
+      "cat": "boru",
+      "stock": 200,
+      "minStock": 30,
+      "buyPrice": 18,
+      "sellPrice": 28,
+      "unit": "metre",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p2",
+      "code": "BRU002",
+      "name": "PVC Boru 1/2\"",
+      "cat": "boru",
+      "stock": 150,
+      "minStock": 50,
+      "buyPrice": 8,
+      "sellPrice": 14,
+      "unit": "metre",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p3",
+      "code": "BRU003",
+      "name": "Dirsek Galvaniz 3/4\"",
+      "cat": "boru",
+      "stock": 80,
+      "minStock": 20,
+      "buyPrice": 5,
+      "sellPrice": 9,
+      "unit": "adet",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p4",
+      "code": "ELK001",
+      "name": "2.5mm² NYA Kablo",
+      "cat": "elektrik",
+      "stock": 500,
+      "minStock": 100,
+      "buyPrice": 3.5,
+      "sellPrice": 6,
+      "unit": "metre",
+      "supplierId": "s2",
+      "image": ""
+    },
+    {
+      "id": "p5",
+      "code": "ELK002",
+      "name": "Sigorta Otomatik 16A",
+      "cat": "elektrik",
+      "stock": 45,
+      "minStock": 10,
+      "buyPrice": 28,
+      "sellPrice": 55,
+      "unit": "adet",
+      "supplierId": "s2",
+      "image": ""
+    },
+    {
+      "id": "p6",
+      "code": "ELK003",
+      "name": "Priz Topraklı",
+      "cat": "elektrik",
+      "stock": 60,
+      "minStock": 20,
+      "buyPrice": 12,
+      "sellPrice": 22,
+      "unit": "adet",
+      "supplierId": "s2",
+      "image": ""
+    },
+    {
+      "id": "p7",
+      "code": "ALE001",
+      "name": "Çekiç 500g",
+      "cat": "alet",
+      "stock": 20,
+      "minStock": 5,
+      "buyPrice": 45,
+      "sellPrice": 85,
+      "unit": "adet",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p8",
+      "code": "ALE002",
+      "name": "Tornavida Seti 8li",
+      "cat": "alet",
+      "stock": 15,
+      "minStock": 5,
+      "buyPrice": 55,
+      "sellPrice": 110,
+      "unit": "takım",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p9",
+      "code": "HRD001",
+      "name": "M8x30 Vida Seti 50li",
+      "cat": "hirdavat",
+      "stock": 12,
+      "minStock": 15,
+      "buyPrice": 8,
+      "sellPrice": 18,
+      "unit": "kutu",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p10",
+      "code": "HRD002",
+      "name": "Dübel 10mm 100lü",
+      "cat": "hirdavat",
+      "stock": 80,
+      "minStock": 20,
+      "buyPrice": 6,
+      "sellPrice": 12,
+      "unit": "kutu",
+      "supplierId": "s1",
+      "image": ""
+    },
+    {
+      "id": "p11",
+      "code": "YPI001",
+      "name": "Çimento Portland 50kg",
+      "cat": "yapi",
+      "stock": 60,
+      "minStock": 20,
+      "buyPrice": 120,
+      "sellPrice": 180,
+      "unit": "çuval",
+      "supplierId": "s3",
+      "image": ""
+    },
+    {
+      "id": "p12",
+      "code": "YPI002",
+      "name": "Alçı 25kg",
+      "cat": "yapi",
+      "stock": 30,
+      "minStock": 10,
+      "buyPrice": 55,
+      "sellPrice": 90,
+      "unit": "çuval",
+      "supplierId": "s3",
+      "image": ""
+    },
+    {
+      "id": "p13",
+      "code": "KMY001",
+      "name": "Silikon Şeffaf 310ml",
+      "cat": "kimya",
+      "stock": 35,
+      "minStock": 10,
+      "buyPrice": 22,
+      "sellPrice": 40,
+      "unit": "adet",
+      "supplierId": "s3",
+      "image": ""
+    },
+    {
+      "id": "p14",
+      "code": "BOY001",
+      "name": "İç Cephe Boya 2.5L",
+      "cat": "boya",
+      "stock": 25,
+      "minStock": 8,
+      "buyPrice": 95,
+      "sellPrice": 160,
+      "unit": "adet",
+      "supplierId": "s3",
+      "image": ""
+    },
+    {
+      "id": "p15",
+      "code": "BOY002",
+      "name": "Dış Cephe Boya 7.5L",
+      "cat": "boya",
+      "stock": 8,
+      "minStock": 5,
+      "buyPrice": 280,
+      "sellPrice": 450,
+      "unit": "adet",
+      "supplierId": "s3",
+      "image": ""
+    },
+    {
+      "id": "p16",
+      "code": "TST001",
+      "name": "Su Sayacı 1/2",
+      "cat": "tesisat",
+      "stock": 4,
+      "minStock": 3,
+      "buyPrice": 85,
+      "sellPrice": 160,
+      "unit": "adet",
+      "supplierId": "s1",
+      "image": ""
+    }
   ],
   "customers": [
-    {"id":"c1","name":"Ahmet Yılmaz (Usta)","phone":"0532 123 45 67","address":"Bağcılar, İstanbul","note":""},
-    {"id":"c2","name":"Mehmet Kaya (Müteahhit)","phone":"0535 987 65 43","address":"Sultangazi, İstanbul","note":"İndirim var"},
-    {"id":"c3","name":"Fatma Demir","phone":"0542 456 78 90","address":"Esenler, İstanbul","note":""},
-    {"id":"c4","name":"Kadir İnşaat Ltd.","phone":"0212 333 44 55","address":"Bağcılar, İstanbul","note":"Kurumsal müşteri"}
+    {
+      "id": "c1",
+      "name": "Ahmet Yılmaz (Usta)",
+      "phone": "0532 123 45 67",
+      "address": "Bağcılar, İstanbul",
+      "note": ""
+    },
+    {
+      "id": "c2",
+      "name": "Mehmet Kaya (Müteahhit)",
+      "phone": "0535 987 65 43",
+      "address": "Sultangazi, İstanbul",
+      "note": "İndirim var"
+    },
+    {
+      "id": "c3",
+      "name": "Fatma Demir",
+      "phone": "0542 456 78 90",
+      "address": "Esenler, İstanbul",
+      "note": ""
+    },
+    {
+      "id": "c4",
+      "name": "Kadir İnşaat Ltd.",
+      "phone": "0212 333 44 55",
+      "address": "Bağcılar, İstanbul",
+      "note": "Kurumsal müşteri"
+    }
   ],
   "suppliers": [
-    {"id":"s1","name":"Demir Metal A.Ş.","phone":"0212 111 22 33","address":"İkitelli OSB, İstanbul","contact":"Hasan Bey","email":""},
-    {"id":"s2","name":"Elektro Malzeme Ltd.","phone":"0216 444 55 66","address":"Çerkezköy, Tekirdağ","contact":"Ayşe Hanım","email":""},
-    {"id":"s3","name":"Yapı ve İnşaat A.Ş.","phone":"0232 777 88 99","address":"Kemalpaşa, İzmir","contact":"Murat Bey","email":""}
+    {
+      "id": "s1",
+      "name": "Demir Metal A.Ş.",
+      "phone": "0212 111 22 33",
+      "address": "İkitelli OSB, İstanbul",
+      "contact": "Hasan Bey",
+      "email": ""
+    },
+    {
+      "id": "s2",
+      "name": "Elektro Malzeme Ltd.",
+      "phone": "0216 444 55 66",
+      "address": "Çerkezköy, Tekirdağ",
+      "contact": "Ayşe Hanım",
+      "email": ""
+    },
+    {
+      "id": "s3",
+      "name": "Yapı ve İnşaat A.Ş.",
+      "phone": "0232 777 88 99",
+      "address": "Kemalpaşa, İzmir",
+      "contact": "Murat Bey",
+      "email": ""
+    }
   ],
   "transactions": [],
-  "supplierTx": []
+  "lastUpdated": "2026-04-07T03:57:44.857Z"
 }
