@@ -2,25 +2,14 @@
   "name": "UstaYapı - Stok Yönetimi",
   "short_name": "UstaYapı",
   "description": "Hırdavat Stok ve Müşteri Yönetim Sistemi",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#07090f",
   "theme_color": "#f59e0b",
   "lang": "tr",
   "orientation": "any",
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ],
   "categories": ["business", "productivity"]
 }
