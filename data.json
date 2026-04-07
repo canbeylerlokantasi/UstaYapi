@@ -212,13 +212,6 @@
   ],
   "customers": [
     {
-      "id": "c1",
-      "name": "Ahmet Yılmaz (Usta)",
-      "phone": "0532 123 45 67",
-      "address": "Bağcılar, İstanbul",
-      "note": ""
-    },
-    {
       "id": "c2",
       "name": "Mehmet Kaya (Müteahhit)",
       "phone": "0535 987 65 43",
@@ -267,5 +260,5 @@
     }
   ],
   "transactions": [],
-  "lastUpdated": "2026-04-07T03:57:44.857Z"
+  "lastUpdated": "2026-04-07T06:08:21.997Z"
 }
