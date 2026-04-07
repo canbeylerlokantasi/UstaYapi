@@ -1077,11 +1077,19 @@ function App(){
     ${modal==='etiket'&&html`<${EtiketModal} products=${products} onClose=${()=>setModal(null)}/>`}
     ${hatCust&&html`<${BorcModal} cust=${hatCust} balance=${custBal[hatCust.id]||0} onClose=${()=>setHatCust(null)}/>`}
     ${confirmCfg&&html`<${Confirm} title=${confirmCfg.title} msg=${confirmCfg.msg} onOk=${confirmCfg.onOk} onCancel=${()=>setConfirmCfg(null)}/>`}
-  </div>`;
+      </div>`;
 }
 
-render(html`<${App}/>`,document.getElementById('app'));
+render(html`<${App}/>`, document.getElementById('app'));
 </script>
-<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js?v=2')
+      .then(() => console.log("PWA Hazır!"))
+      .catch(err => console.log("Hata:", err));
+  }
+</script>
+
 </body>
 </html>
