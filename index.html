@@ -13,32 +13,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root { --bg: #07090f; --card: #0e1420; --primary: #f59e0b; --text: #e8edf5; --border: #1b2438; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; }
-        
-        .navbar { background: var(--card); padding: 15px; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav-btn { background: none; border: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
-        .nav-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
-
-        .container { padding: 15px; padding-bottom: 80px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; position: relative; }
-        .price-tag { color: var(--primary); font-weight: bold; font-size: 1.1rem; }
-        
-        .btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; }
+        .navbar { background: var(--card); padding: 15px; display: flex; justify-content: space-around; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-btn { background: none; border: none; color: #64748b; font-size: 1.4rem; cursor: pointer; }
+        .nav-btn.active { color: var(--primary); }
+        .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 100px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+        .btn { padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
         .btn-primary { background: var(--primary); color: #000; width: 100%; }
+        .btn-wa { background: #25d366; color: #fff; width: 100%; }
         .btn-danger { background: #f05252; color: #fff; }
-        .btn-wa { background: #25d366; color: #fff; }
-
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #94a3b8; }
-        input, select { width: 100%; padding: 12px; background: #07090f; border: 1px solid var(--border); border-radius: 8px; color: #fff; }
-
-        /* Modal / Overlay */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        input, select { width: 100%; padding: 12px; background: #07090f; border: 1px solid var(--border); border-radius: 8px; color: #fff; margin-top: 5px; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .modal { background: var(--card); width: 100%; max-width: 400px; padding: 25px; border-radius: 15px; border: 1px solid var(--border); }
-        
-        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; background: #1b2438; }
-        .stock-low { color: #f05252; font-weight: bold; }
+        .stock-badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; background: #1b2438; color: var(--primary); }
     </style>
 </head>
 <body>
@@ -46,165 +34,103 @@
 
     <script type="text/babel">
         const { useState, useEffect } = React;
-
-        // --- AYARLAR ---
         const MASTER_ADMIN = { user: "admin", pass: "1234" };
-        const DEPO_PASS = "depo123"; // Depo Editörü Şifresi
+        const DEPO_PASS = "depo123";
 
         function App() {
             const [user, setUser] = useState(null);
-            const [view, setView] = useState('customers'); // customers, stock, sales
-            const [data, setData] = useState({ customers: [], products: [] });
-            const [showDepoLogin, setShowDepoLogin] = useState(false);
+            const [view, setView] = useState('customers'); 
+            const [data, setData] = useState({ products: [], customers: [], transactions: [] });
             const [isDepoAuth, setIsDepoAuth] = useState(false);
-            const [githubToken, setGithubToken] = useState("");
+            const [showDepoLogin, setShowDepoLogin] = useState(false);
+            const [token, setToken] = useState("");
 
-            // GitHub'dan veri çekme (Dosya yolunu kendi repona göre güncelle)
             useEffect(() => {
-                fetch('data.json').then(r => r.json()).then(setData).catch(e => console.log("Veri yükleme hatası"));
+                fetch('data.json').then(r => r.json()).then(setData).catch(() => console.error("data.json eksik"));
             }, []);
 
-            // WhatsApp Paylaşım
-            const shareToWA = (cust) => {
-                const msg = `Merhaba ${cust.name}, UstaYapı güncel borç bakiyeniz: ${cust.balance || 0} TL'dir. İyi çalışmalar.`;
-                window.open(`https://wa.me/${cust.phone}?text=${encodeURIComponent(msg)}`);
+            const syncGithub = async (updatedData) => {
+                if(!token) return console.log("Token yok, sadece yerel.");
+                // GitHub Sync logic: GitHub API calls would go here using 'token'
             };
 
-            // Stok Güncelleme (Depo Editörü İçin)
-            const updateStock = (prodId, amount) => {
-                const newProducts = data.products.map(p => 
-                    p.id === prodId ? { ...p, stock: p.stock + parseInt(amount) } : p
-                );
-                const newData = { ...data, products: newProducts };
+            const handleSale = (cId, pId, q) => {
+                const prod = data.products.find(p => p.id === pId);
+                if(prod.stock < q) return alert("Stok yetersiz!");
+                const amount = prod.sellPrice * q;
+                const newData = {
+                    ...data,
+                    products: data.products.map(p => p.id === pId ? {...p, stock: p.stock - q} : p),
+                    transactions: [...(data.transactions || []), { id: Date.now(), customerId: cId, amount, type: 'satis', date: new Date() }]
+                };
                 setData(newData);
-                saveData(newData);
+                syncGithub(newData);
             };
 
-            // Veriyi Kaydet (GitHub'a yazar - Sadece Token varsa çalışır)
-            const saveData = async (newData) => {
-                if (!githubToken) {
-                    alert("Uyarı: GitHub Token girilmediği için değişiklikler sadece bu cihazda kalacak!");
-                    return;
-                }
-                // Burada GitHub API kodların çalışacak (Önceki versiyondaki gitHubSync mantığı)
-            };
-
-            // Giriş Ekranı
-            if (!user) {
-                return (
-                    <div className="overlay">
-                        <div className="modal">
-                            <h2 style={{textAlign:'center', marginBottom:20}}>UstaYapı Giriş</h2>
-                            <input id="u" placeholder="Kullanıcı" className="input-group" style={{marginBottom:10}} />
-                            <input id="p" type="password" placeholder="Şifre" className="input-group" />
-                            <button className="btn btn-primary" onClick={() => {
-                                const u = document.getElementById('u').value;
-                                const p = document.getElementById('p').value;
-                                if(u === MASTER_ADMIN.user && p === MASTER_ADMIN.pass) setUser(u);
-                                else alert("Hatalı Giriş!");
-                            }}>Giriş Yap</button>
-                            <p style={{fontSize:10, marginTop:15, textAlign:'center', color:'#555'}}>v2.0 PWA Ready</p>
-                        </div>
-                    </div>
-                );
-            }
+            if (!user) return (
+                <div className="overlay"><div className="modal">
+                    <h2 style={{textAlign:'center'}}>UstaYapı Giriş</h2>
+                    <input id="u" placeholder="Kullanıcı" /><input id="p" type="password" placeholder="Şifre" />
+                    <button className="btn btn-primary" style={{marginTop:15}} onClick={() => {
+                        const u = document.getElementById('u').value;
+                        const p = document.getElementById('p').value;
+                        if(u === MASTER_ADMIN.user && p === MASTER_ADMIN.pass) setUser(u);
+                        else alert("Hata!");
+                    }}>Giriş</button>
+                </div></div>
+            );
 
             return (
                 <div>
                     <nav className="navbar">
-                        <button className={`nav-btn ${view==='customers'?'active':''}`} onClick={()=>setView('customers')}><i className="bi bi-people"></i></button>
-                        <button className={`nav-btn ${view==='sales'?'active':''}`} onClick={()=>setView('sales')}><i className="bi bi-cart"></i></button>
-                        <button className={`nav-btn ${view==='depo'?'active':''}`} onClick={()=>{
-                            if(!isDepoAuth) setShowDepoLogin(true);
-                            else setView('depo');
-                        }}><i className="bi bi-box-seam"></i></button>
+                        <button className={`nav-btn ${view==='customers'?'active':''}`} onClick={()=>setView('customers')}><i className="bi bi-people-fill"></i></button>
+                        <button className={`nav-btn ${view==='sales'?'active':''}`} onClick={()=>setView('sales')}><i className="bi bi-cart-plus-fill"></i></button>
+                        <button className={`nav-btn ${view==='depo'?'active':''}`} onClick={()=>{ if(!isDepoAuth) setShowDepoLogin(true); else setView('depo'); }}><i className="bi bi-box-seam-fill"></i></button>
                     </nav>
 
                     <div className="container">
-                        {/* MÜŞTERİ LİSTESİ */}
-                        {view === 'customers' && (
-                            <div>
-                                <div style={{display:'flex', justifyContent:'space-between', marginBottom:15}}>
-                                    <h2>Müşteriler</h2>
-                                    <button className="btn btn-primary" style={{width:'auto'}}>+</button>
-                                </div>
-                                {data.customers.map(c => (
-                                    <div className="card" key={c.id}>
-                                        <div style={{display:'flex', justifyContent:'space-between'}}>
-                                            <strong>{c.name}</strong>
-                                            <span className="price-tag">{c.balance || 0} ₺</span>
-                                        </div>
-                                        <div style={{marginTop:10, display:'flex', gap:10}}>
-                                            <button className="btn btn-wa" onClick={()=>shareToWA(c)}><i className="bi bi-whatsapp"></i> Paylaş</button>
-                                            <button className="btn btn-danger" onClick={()=>{if(confirm('Sil?')) alert('Silindi')}}><i className="bi bi-trash"></i></button>
-                                        </div>
-                                    </div>
-                                ))}
+                        {view === 'customers' && data.customers.map(c => (
+                            <div className="card" key={c.id}>
+                                <strong>{c.name}</strong>
+                                <div style={{marginTop:10}}><button className="btn btn-wa" onClick={() => window.open(`https://wa.me/${c.phone}?text=Borcunuz var.`)}>WhatsApp Paylaş</button></div>
+                            </div>
+                        ))}
+
+                        {view === 'sales' && (
+                            <div className="card">
+                                <h3>Satış Yap</h3>
+                                <select id="sc">{data.customers.map(c => <option value={c.id}>{c.name}</option>)}</select>
+                                <select id="sp">{data.products.map(p => <option value={p.id}>{p.name} ({p.stock})</option>)}</select>
+                                <input id="sq" type="number" defaultValue="1" />
+                                <button className="btn btn-primary" onClick={()=>handleSale(document.getElementById('sc').value, document.getElementById('sp').value, parseInt(document.getElementById('sq').value))}>Tamamla</button>
                             </div>
                         )}
 
-                        {/* DEPO EDİTÖRÜ (STOK YÖNETİMİ) */}
-                        {view === 'depo' && isDepoAuth && (
-                            <div>
-                                <h2>Depo Yönetimi</h2>
-                                <p style={{fontSize:12, marginBottom:10, color: githubToken ? 'green' : 'red'}}>
-                                    {githubToken ? '● Veriler GitHub ile senkronize' : '○ GitHub Token Eksik! (Sadece Yerel)'}
-                                </p>
-                                {data.products.map(p => (
-                                    <div className="card" key={p.id}>
-                                        <div style={{display:'flex', justifyContent:'space-between'}}>
-                                            <span>{p.name}</span>
-                                            <span className={p.stock < p.minStock ? 'stock-low' : ''}>Mevcut: {p.stock}</span>
-                                        </div>
-                                        <div style={{marginTop:10, display:'flex', gap:5}}>
-                                            <button className="btn" style={{background:'#1b2438', color:'#fff'}} onClick={()=>updateStock(p.id, 1)}>+1</button>
-                                            <button className="btn" style={{background:'#1b2438', color:'#fff'}} onClick={()=>updateStock(p.id, 10)}>+10</button>
-                                            <button className="btn btn-danger" style={{marginLeft:'auto'}}>Sil</button>
-                                        </div>
-                                    </div>
-                                ))}
+                        {view === 'depo' && data.products.map(p => (
+                            <div className="card" key={p.id} style={{display:'flex', justifyContent:'space-between'}}>
+                                <span>{p.name}</span> <span className="stock-badge">Stok: {p.stock}</span>
                             </div>
-                        )}
+                        ))}
                     </div>
 
-                    {/* DEPO GİRİŞ MODAL */}
                     {showDepoLogin && (
-                        <div className="overlay">
-                            <div className="modal">
-                                <h3>Depo Yetkilendirme</h3>
-                                <div className="input-group">
-                                    <label>Depo Şifresi</label>
-                                    <input type="password" id="ds" />
-                                </div>
-                                <div className="input-group">
-                                    <label>GitHub Token (Yazma Yetkisi İçin)</label>
-                                    <input type="password" id="gt" placeholder="ghp_xxxx..." />
-                                </div>
-                                <button className="btn btn-primary" onClick={()=>{
-                                    const ds = document.getElementById('ds').value;
-                                    const gt = document.getElementById('gt').value;
-                                    if(ds === DEPO_PASS) {
-                                        setIsDepoAuth(true);
-                                        setGithubToken(gt);
-                                        setShowDepoLogin(false);
-                                        setView('depo');
-                                    } else alert("Hatalı Şifre!");
-                                }}>Yetki Al</button>
-                                <button className="btn" style={{marginTop:10, color:'#94a3b8'}} onClick={()=>setShowDepoLogin(false)}>İptal</button>
-                            </div>
-                        </div>
+                        <div className="overlay"><div className="modal">
+                            <h3>Depo Girişi</h3>
+                            <input id="dp" type="password" placeholder="Depo Şifresi" />
+                            <input id="tk" type="password" placeholder="GitHub Token" />
+                            <button className="btn btn-primary" onClick={()=>{
+                                if(document.getElementById('dp').value === DEPO_PASS) {
+                                    setToken(document.getElementById('tk').value);
+                                    setIsDepoAuth(true); setShowDepoLogin(false); setView('depo');
+                                } else alert("Şifre yanlış!");
+                            }}>Yetki Al</button>
+                        </div></div>
                     )}
                 </div>
             );
         }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-
-        // SERVICE WORKER KAYDI (PWA İÇİN)
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     </script>
 </body>
 </html>
